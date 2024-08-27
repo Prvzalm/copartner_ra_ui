@@ -1,61 +1,54 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { closeIcon, dropdown } from "../assets";
+import { closeIcon } from "../assets";
 import { toast } from "react-toastify";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import FreeTimeForm from "./FreeTimeForm";
+import DiscountForm from "./DiscountForm";
 
 const SubscriptionChatDiscountDialog = ({ closeDialog, addCourse }) => {
-  const [planName, setPlanName] = useState("");
-  const [discountPer, setDiscountPer] = useState("");
-  const [planAmt, setPlanAmt] = useState("");
-  const [discountedAmount, setdiscountedAmount] = useState("");
-  const [isdiscountedAmountOpen, setIsdiscountedAmountOpen] = useState(false);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [offersDuration, setOffersDuration] = useState("");
-  const [duration, setDuration] = useState("");
-  const [plans, setPlans] = useState([]);
-  const [uniquePlanTypes, setUniquePlanTypes] = useState([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const [subscriptionType, setSubscriptionType] = useState(null);
-  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState("Discount");
-
-  const inputClassName =
-    subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
-
+  const [plans, setPlans] = useState([]);
   const stackholderId = sessionStorage.getItem("stackholderId");
 
-  const handleSelectChange = () => {};
+  const fetchPlans = async () => {
+    try {
+      const response = await axios.get(
+        `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
+      );
 
-  const handleSubmit = () => {};
+      // Log the entire response for debugging
+      console.log("API Response:", response);
 
-  const handleDiscountChange = () => {};
+      if (response.data && response.data.isSuccess) {
+        const availablePlans = response.data.data.filter(
+          (plan) => plan.discountPercentage > 0
+        );
 
-  const getSubscriptionTypeLabel = (type) => {
-    switch (type) {
-      case 1:
-        return "Commodity";
-      case 2:
-        return "Equity";
-      case 3:
-        return "Futures & Options";
-      default:
-        return "Select Subscription Type";
+        console.log("Available Plans after filtering:", availablePlans);
+
+        if (availablePlans.length > 0) {
+          setPlans(availablePlans);
+        } else {
+          toast.warn("No plans with a discount were found", {
+            position: "top-right",
+          });
+        }
+      } else {
+        toast.error("Failed to fetch plans: API did not return success", {
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching plans:", error);
+      toast.error("Error fetching plans. Please try again later.", {
+        position: "top-right",
+      });
     }
   };
 
-  const toggleSubscriptionDropdown = () => {
-    setIsSubscriptionOpen(!isSubscriptionOpen);
-  };
-
-  const handleSubClick = (option) => {
-    setSubscriptionType(option);
-    setIsSubscriptionOpen(false);
-  };
+  useEffect(() => {
+    fetchPlans();
+  }, [stackholderId]);
 
   const handleButtonClick = (button) => {
     setSelectedButton(button);
@@ -102,203 +95,21 @@ const SubscriptionChatDiscountDialog = ({ closeDialog, addCourse }) => {
             </button>
           </div>
 
-          <div className="flex flex-col gap-4 md:w-[1006px]">
-            {selectedButton === "Discount" && (
-              <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
-                <div className="relative">
-                  <label
-                    htmlFor="subscriptionType"
-                    className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    md:w-[140px] w-[134px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                  >
-                    Subscription Type
-                  </label>
-                  <div className="relative">
-                    <div className="relative">
-                      <input
-                        id="subscriptionType"
-                        value={getSubscriptionTypeLabel(subscriptionType)}
-                        onClick={toggleSubscriptionDropdown}
-                        className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
-                      />
-                      <img
-                        src={dropdown}
-                        alt="DropDown"
-                        className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
-                      />
-                    </div>
-                    {isSubscriptionOpen && (
-                      <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
-                        <ul className="py-1">
-                          <li
-                            onClick={() => handleSubClick(1)}
-                            className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            Commodity
-                          </li>
-                          <li
-                            onClick={() => handleSubClick(2)}
-                            className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            Equity
-                          </li>
-                          <li
-                            onClick={() => handleSubClick(3)}
-                            className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            Futures & Options
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="relative">
-                  <div className="mb-0">
-                    <label
-                      className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                      md:w-[110px] w-[100px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                    >
-                      Plan Name
-                    </label>
-                    <input
-                      type="text"
-                      value={planName}
-                      onChange={(e) => setPlanName(e.target.value)}
-                      id="default-input"
-                      className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {selectedButton === "Discount" && (
-              <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
-                <div className="relative">
-                  <label
-                    className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    md:w-[100px] w-[140px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                  >
-                    Plan Amount
-                  </label>
-                  <input
-                    type="number"
-                    value={planAmt}
-                    onChange={(e) => setPlanAmt(e.target.value)}
-                    id="default-input"
-                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                  />
-                  {errorMessage && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
-                  )}
-                </div>
-                <div className="relative">
-                  <label
-                    className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    md:w-[160px] w-[140px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                  >
-                    Discount Percentage
-                  </label>
-                  <input
-                    type="number"
-                    value={discountPer}
-                    onChange={handleDiscountChange}
-                    id="default-input"
-                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                  />
-                  {errorMessage && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
-              <div className="relative">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[90px] w-[80px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  Start Date
-                </label>
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  showTimeSelect
-                  dateFormat="Pp"
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
-              <div className="relative">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[90px] w-[80px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  End Date
-                </label>
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  showTimeSelect
-                  dateFormat="Pp"
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
-            </div>
-
-            <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
-              <div className="relative">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    md:w-[90px] w-[90px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  Duration
-                </label>
-                <input
-                  type="number"
-                  value={duration}
-                  onChange={(e) => setDuration(e.target.value)}
-                  id="default-input"
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
-              {selectedButton === "Discount" && (
-                <div className="relative">
-                  <div className="mb-0">
-                    <label
-                      className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                      md:w-[140px] w-[100px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                    >
-                      Discount Amount
-                    </label>
-                    <input
-                      type="text"
-                      value={discountedAmount}
-                      onChange={(e) => setdiscountedAmount(e.target.value)}
-                      id="default-input"
-                      className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex md:flex-row flex-col gap-2 justify-end py-4">
-            <button
-              onClick={handleSubmit}
-              className="px-4 w-full py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600"
-            >
-              Confirm
-            </button>
-            <button
-              onClick={closeDialog}
-              className="px-4 w-full py-2 bg-gray-300 md:text-[14px] text-[14px] text-gray-700 rounded-lg hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-          </div>
+          {selectedButton === "Free Time" && (
+            <FreeTimeForm
+              plans={plans}
+              stackholderId={stackholderId}
+              closeDialog={closeDialog}
+              addCourse={addCourse}
+            />
+          )}
+          {selectedButton === "Discount" && (
+            <DiscountForm
+              plans={plans}
+              closeDialog={closeDialog}
+              addCourse={addCourse}
+            />
+          )}
         </div>
       </div>
     </div>

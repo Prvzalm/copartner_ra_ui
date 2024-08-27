@@ -7,11 +7,10 @@ import DatePicker from "react-datepicker";
 
 const Chats = () => {
   const [smallScreen, setSmallScreen] = useState(false);
-  const [subTable, setSubTable] = useState([]);
-  const [activeUser, setActiveUser] = useState([]);
-  const [planTypeCounts, setPlanTypeCounts] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [isChatLive, setIsChatLive] = useState(false);
+  const [expertData, setExpertData] = useState(null);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -32,11 +31,35 @@ const Chats = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  const isChatLiveApi = `https://copartners.in/ExpertServices/api/Experts?Id=${stackholderId}`;
+
   const handleDeleteTable = () => {};
 
   const handleDateChange = () => {};
 
   const handleDownloadSheet = () => {};
+
+  const handleCheckboxChange = async () => {
+    const newValue = !isChatLive;
+    setIsChatLive(newValue);
+
+    try {
+      await axios.patch(isChatLiveApi, [
+        {
+          path: "isChatLive",
+          op: "replace",
+          value: newValue,
+        },
+      ]);
+      toast.success("Chat status updated successfully!", {
+        position: "top-right",
+      });
+    } catch (error) {
+      toast.error("Failed to update chat status!", {
+        position: "top-right",
+      });
+    }
+  };
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
@@ -44,44 +67,50 @@ const Chats = () => {
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
           Chats Status
         </span>
-        <label class="inline-flex items-center me-5 cursor-pointer">
-          <input type="checkbox" value="" class="sr-only peer" checked />
-          <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+        <label className="inline-flex items-center me-5 cursor-pointer">
+          <input
+            type="checkbox"
+            value=""
+            className="sr-only peer"
+            checked={isChatLive}
+            onChange={handleCheckboxChange}
+          />
+          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
         </label>
       </div>
 
       <div className="flex py-[4rem]">
         <Link to="/chats/chats_history">
-        <div className="flex xl:w-[1520px] md:w-[1120px] md:gap-6 gap-2">
-        <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
-            <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2 md:w-auto w-[140px] md:h-auto h-[28px]">
-              Paid Active Queries:
-            </span>
-            <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
-              10
-            </span>
-            <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
-              5 Minutes Access
-            </span>
-            <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
-              Response
-            </button>
+          <div className="flex xl:w-[1520px] md:w-[1120px] md:gap-6 gap-2">
+            <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
+              <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2 md:w-auto w-[140px] md:h-auto h-[28px]">
+                Paid Active Queries:
+              </span>
+              <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
+                10
+              </span>
+              <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
+                5 Minutes Access
+              </span>
+              <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
+                Response
+              </button>
+            </div>
+            <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
+              <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2 md:w-auto w-[140px] md:h-auto h-[28px]">
+                Free Active Queries:
+              </span>
+              <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
+                10
+              </span>
+              <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
+                5 Minutes Access
+              </span>
+              <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
+                Response
+              </button>
+            </div>
           </div>
-          <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
-            <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2 md:w-auto w-[140px] md:h-auto h-[28px]">
-              Free Active Queries:
-            </span>
-            <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
-              10
-            </span>
-            <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
-              5 Minutes Access
-            </span>
-            <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
-              Response
-            </button>
-          </div>
-        </div>
         </Link>
       </div>
 
@@ -125,7 +154,7 @@ const Chats = () => {
                 className="flex flex-col justify-around h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
               >
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                {row.transactioId}
+                  {row.transactioId}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">DATE:</span> {row.date}

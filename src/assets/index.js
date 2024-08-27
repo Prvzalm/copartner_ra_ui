@@ -60,6 +60,7 @@ import chatWhite from './chatWhite.png';
 import threeDots from './threeDots.png';
 import chatUser1 from './chatUser1.png';
 import chatUser2 from './chatUser2.png';
+import chatUser3 from './chatUser1.jpg';
 import attachDoc from './attachDoc.png';
 import audio from './audio.png';
 import sendChat from './sendChat.png';
@@ -120,5 +121,6 @@ export {
     threeDots,
     chatUser1, chatUser2,
     attachDoc, sendChat, audio,
-    telegramChannelActive, telegramChannelInactive
+    telegramChannelActive, telegramChannelInactive, 
+    chatUser3,
 }
