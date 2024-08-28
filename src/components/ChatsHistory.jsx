@@ -26,7 +26,7 @@ const ChatsHistory = () => {
   const [chatUserList, setChatUserList] = useState([]);
   const [activeTab, setActiveTab] = useState("Active");
   const [activeSubTab, setActiveSubTab] = useState("Premium");
-  const [currentPaidPlanId, setCurrentPaidPlanId] = useState('');
+  const [currentPaidPlanId, setCurrentPaidPlanId] = useState("");
   const [chatPlan, setChatPlan] = useState(null);
   const [currentPlanType, setCurrentPlanType] = useState("");
   const [currentPlanId, setCurrentPlanId] = useState("");
@@ -119,6 +119,12 @@ const ChatsHistory = () => {
       console.error("Error fetching chat users:", error);
     }
   };
+
+  // Polling to auto-refresh chat user list
+  useEffect(() => {
+    const interval = setInterval(fetchChatUsers, 2000);
+    return () => clearInterval(interval);
+  }, [stackholderId]);
 
   useEffect(() => {
     if (stackholderId) {
@@ -235,7 +241,40 @@ const ChatsHistory = () => {
           startDateTime,
           endDateTime
         ) => {
-          console.log("Message..", message, planId, planType, paidPlanId);
+          console.log(
+            "Message received from:",
+            user,
+            message,
+            planId,
+            planType,
+            paidPlanId
+          );
+
+          const userName =
+            chatUserList.find(
+              (chatUser) => chatUser.mobileNumber === user
+            )?.chatUserName || "Unknown User";
+
+          // Always update unseen messages count
+          setUnseenMessagesCount((prevCounts) => {
+            const updatedCounts = {
+              ...prevCounts,
+              [user]: (prevCounts[user] || 0) + 1,
+            };
+            localStorage.setItem(
+              "unseenMessagesCount",
+              JSON.stringify(updatedCounts)
+            );
+            return updatedCounts;
+          });
+
+          // Always show a notification for new messages
+          toast.info(`New message received from ${userName}`, {
+            position: "top-right",
+            autoClose: 5000,
+          });
+
+          // If a user is selected and the message is from the active user
           if (activeUser && user === activeUser.mobileNumber) {
             sessionStorage.setItem("planType", planType);
             sessionStorage.setItem("planId", planId);
@@ -256,7 +295,7 @@ const ChatsHistory = () => {
               endDateTime: endDateTime,
               planType: planType,
               planId: planId,
-              paidPlanId: paidPlanId
+              paidPlanId: paidPlanId,
             };
 
             setChatMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -269,29 +308,12 @@ const ChatsHistory = () => {
               return updatedConversations;
             });
 
-            if (
-              planType === "D" ||
-              (chatPlan && chatPlan.id === planId)
-            ) {
+            if (planType === "D" || (chatPlan && chatPlan.id === planId)) {
               startCountdown(newMessage, user);
             }
 
             setIsSendMessageDisabled(false);
-
             scrollToBottom();
-          } else {
-            // Update unseen messages count
-            setUnseenMessagesCount((prevCounts) => {
-              const updatedCounts = {
-                ...prevCounts,
-                [user]: (prevCounts[user] || 0) + 1,
-              };
-              localStorage.setItem(
-                "unseenMessagesCount",
-                JSON.stringify(updatedCounts)
-              );
-              return updatedCounts;
-            });
           }
         }
       );
@@ -307,7 +329,7 @@ const ChatsHistory = () => {
             payload: { text: message.content },
             planId: message.planId,
             planType: message.planType,
-            paidPlanId: message.paidPlanId
+            paidPlanId: message.paidPlanId,
           };
 
           if (message.planId && message.planType && message.paidPlanId) {
@@ -391,10 +413,7 @@ const ChatsHistory = () => {
   const startCountdown = (message, user) => {
     const mobileNumber = user.mobileNumber;
 
-    if (
-      !chatPlan &&
-      message.planType !== "D"
-    ) {
+    if (!chatPlan && message.planType !== "D") {
       console.log(
         "No chat plan found or planType is not 'D'. Countdown not started."
       );
@@ -406,14 +425,9 @@ const ChatsHistory = () => {
     if (message.planType === "D") {
       durationInMinutes = 2;
     } else {
-      const plan = chatPlan.find(
-        (p) => p.id === message.planId
-      );
+      const plan = chatPlan.find((p) => p.id === message.planId);
       if (!plan) {
-        console.log(
-          "No matching plan found for Plan ID:",
-          message.planId
-        );
+        console.log("No matching plan found for Plan ID:", message.planId);
         return;
       }
       durationInMinutes = plan.duration;
@@ -433,10 +447,7 @@ const ChatsHistory = () => {
         ...prevCountdowns,
         [mobileNumber]: durationInSeconds,
       };
-      sessionStorage.setItem(
-        "countdowns",
-        JSON.stringify(updatedCountdowns)
-      );
+      sessionStorage.setItem("countdowns", JSON.stringify(updatedCountdowns));
       sessionStorage.setItem("startTime", startTime);
       sessionStorage.setItem("endTime", endTime);
       sessionStorage.setItem("activeUserMobile", mobileNumber);
@@ -456,10 +467,8 @@ const ChatsHistory = () => {
           clearInterval(intervalRefs.current[mobileNumber]);
           delete intervalRefs.current[mobileNumber];
 
-          const {
-            [mobileNumber]: removedCountdown,
-            ...remainingCountdowns
-          } = prevCountdowns;
+          const { [mobileNumber]: removedCountdown, ...remainingCountdowns } =
+            prevCountdowns;
           sessionStorage.setItem(
             "countdowns",
             JSON.stringify(remainingCountdowns)
@@ -484,10 +493,7 @@ const ChatsHistory = () => {
           [mobileNumber]: Math.round(timeLeft),
         };
 
-        sessionStorage.setItem(
-          "countdowns",
-          JSON.stringify(updatedCountdowns)
-        );
+        sessionStorage.setItem("countdowns", JSON.stringify(updatedCountdowns));
         return updatedCountdowns;
       });
     }, 1000);
@@ -513,7 +519,7 @@ const ChatsHistory = () => {
         payload: { text: messageInput },
         planType: planType,
         planId: planId,
-        paidPlanId: paidPlanId
+        paidPlanId: paidPlanId,
       };
 
       setChatMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -532,7 +538,7 @@ const ChatsHistory = () => {
         message: messageInput,
         planType,
         planId,
-        paidPlanId
+        paidPlanId,
       });
 
       if (connectionRef.current[activeUser.mobileNumber]) {
@@ -544,7 +550,7 @@ const ChatsHistory = () => {
             messageInput,
             planType,
             planId,
-            paidPlanId,
+            paidPlanId
           );
         } catch (err) {
           console.error("SignalR Send Message Error: ", err.message);
@@ -589,9 +595,7 @@ const ChatsHistory = () => {
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${String(mins).padStart(2, "0")}:${String(
-      secs
-    ).padStart(2, "0")}`;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
 
   return (
@@ -605,10 +609,7 @@ const ChatsHistory = () => {
           <div className="w-[300px] h-auto bg-[#272F3D]">
             <div className="flex flex-col gap-4 justify-between">
               <div className="flex gap-4 md:ml-[-1rem] ml-0">
-                <Link
-                  to="/chats"
-                  className="flex flex-row items-center gap-2"
-                >
+                <Link to="/chats" className="flex flex-row items-center gap-2">
                   <img
                     src={backImg}
                     alt=""
@@ -646,9 +647,7 @@ const ChatsHistory = () => {
                             ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
                             : "bg-transparent text-white font-[600] font-inter text-[12px]"
                         }`}
-                        onClick={() =>
-                          setActiveSubTab("Premium")
-                        }
+                        onClick={() => setActiveSubTab("Premium")}
                       >
                         Premium
                       </li>
@@ -672,9 +671,7 @@ const ChatsHistory = () => {
                             ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
                             : "bg-transparent text-white font-[600] font-inter text-[12px]"
                         }`}
-                        onClick={() =>
-                          setActiveSubTab("PremiumHistory")
-                        }
+                        onClick={() => setActiveSubTab("PremiumHistory")}
                       >
                         Premium History
                       </li>
@@ -684,9 +681,7 @@ const ChatsHistory = () => {
                             ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
                             : "bg-transparent text-white font-[600] font-inter text-[12px]"
                         }`}
-                        onClick={() =>
-                          setActiveSubTab("FreeHistory")
-                        }
+                        onClick={() => setActiveSubTab("FreeHistory")}
                       >
                         Free History
                       </li>
@@ -698,8 +693,7 @@ const ChatsHistory = () => {
             <div className="w-[362px] max-h-[500px] flex gap-4 flex-col mt-4 overflow-y-auto">
               {chatUserList.map((users) => {
                 const isActive =
-                  activeUser &&
-                  activeUser.mobileNumber === users.mobileNumber;
+                  activeUser && activeUser.mobileNumber === users.mobileNumber;
                 return (
                   <div
                     key={users.mobileNumber}
@@ -719,7 +713,7 @@ const ChatsHistory = () => {
                           {users.chatUserName}
                         </span>
                         {unseenMessagesCount[users.mobileNumber] > 0 && (
-                          <span className="bg-white text-black rounded-full w-[30px] items-center text-center font-[600]">
+                          <span className="bg-white text-black rounded-full w-[30px] flex items-center justify-center font-[600]">
                             {unseenMessagesCount[users.mobileNumber]}
                           </span>
                         )}
@@ -816,9 +810,7 @@ const ChatsHistory = () => {
                   placeholder="Type your message"
                   className="flex-grow h-[43px] bg-[#1F2735] text-white placeholder-gray-400 px-4 rounded-[6px] focus:outline-none border-none"
                   value={messageInput}
-                  onChange={(e) =>
-                    setMessageInput(e.target.value)
-                  }
+                  onChange={(e) => setMessageInput(e.target.value)}
                   disabled={isSendMessageDisabled}
                 />
                 <button
