@@ -55,6 +55,15 @@ import eyeClose from './eyeClosed.png';
 import login from './Login.png';
 import Link from './LinK.png';
 import backImg from './backImg.png';
+import webinarWhite from './webnarWhite.png';
+import chatWhite from './chatWhite.png';
+import threeDots from './threeDots.png';
+import chatUser1 from './chatUser1.png';
+import chatUser2 from './chatUser2.png';
+import chatUser3 from './chatUser1.jpg';
+import attachDoc from './attachDoc.png';
+import audio from './audio.png';
+import sendChat from './sendChat.png';
 import telegramChannelActive from './telegramChannelActive.png';
 import telegramChannelInactive from './telegramChannelInactive.png';
 import standardQues from './standardQues.png';
@@ -112,4 +121,10 @@ export {
     telegramChannelActive, telegramChannelInactive,
     standardQues,
     standardQuesInactive,
+    webinarWhite,
+    chatWhite,
+    threeDots,
+    chatUser1, chatUser2,
+    attachDoc, sendChat, audio,
+    chatUser3,
 }

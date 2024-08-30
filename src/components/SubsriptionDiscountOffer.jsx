@@ -3,6 +3,7 @@ import { deleteIcon } from "../assets";
 import SubscriptionEditDiscount from "./SubscriptionEditDiscount";
 import axios from "axios";
 import { toast } from "react-toastify";
+import SubscriptionChat from "./SubscriptionChat";
 
 const SubsriptionDiscountOffer = () => {
   const [smallScreen, setSmallScreen] = useState(false);
@@ -116,10 +117,10 @@ const SubsriptionDiscountOffer = () => {
   };
 
   return (
-    <div className="md:py-[5rem] py-[4rem] bg-gradient">
+    <div className="md:pt-[5rem] py-[4rem] bg-gradient">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex items-center justify-between md:py-0 py-6">
         <span className="md:w-[240px] w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
-          Discount Offers Listing
+          Service Discount Offers
         </span>
         <button
           onClick={openDialog}
@@ -135,7 +136,7 @@ const SubsriptionDiscountOffer = () => {
         )}
       </div>
 
-      <div className="flex md:mt-[3rem] mt-1">
+      <div className="flex md:mt-[2rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
             {discount.filter((row) => row.discountPercentage > 0).map((row, index) => (
@@ -249,6 +250,7 @@ const SubsriptionDiscountOffer = () => {
           </table>
         )}
       </div>
+      <SubscriptionChat />
     </div>
   );
 };

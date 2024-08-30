@@ -11,6 +11,8 @@ import NewPassword from "./components/NewPassword";
 import ConfirmPassword from "./components/ConfirmPassword";
 import AnalysisBoard from "./components/AnalysisBoard";
 import Webinar from "./components/Webinar";
+import Chats from "./components/Chats";
+import ChatsHistory from "./components/ChatsHistory";
 import TelegramChannel from "./components/TelegramChannel";
 import StandardQues from "./components/StandardQues";
 
@@ -82,6 +84,11 @@ function App() {
                 }
               />
               <Route path="/analysis_board" element={<AnalysisBoard />} />
+              <Route path="/webinar" element={<Webinar />} />
+              <Route path="/subscription" element={<Subscription />} />
+              <Route path="/wallet" element={<Wallet />} />
+              <Route path="/chats" element={<Chats />} />
+              <Route path="/chats/chats_history" element={<ChatsHistory />} />
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
               {telegramData.length > 0 && <Route path="/telegram_channel" element={<TelegramChannel />} />}

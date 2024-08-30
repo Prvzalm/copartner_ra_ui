@@ -18,6 +18,7 @@ import {
   hdfc, kotak, icici,
   googlepay, paytm, phonepe, telegramChannelActive, telegramChannelInactive,
   standardQues, standardQuesInactive,
+  webinarWhite, chatWhite,
 } from "../assets";
 
 export const sideBar = [
@@ -37,7 +38,7 @@ export const sideBar = [
   },
   // {
   //   id: 'webinar',
-  //   activeIcon: webinarIcon,
+  //   activeIcon: webinarWhite,
   //   inactiveIcon: webinarIcon,
   //   title: "Webinar",
   //   path: '/webinar'
@@ -55,12 +56,13 @@ export const sideBar = [
     title: "Wallet",
     path: '/wallet'
   },
-  // {
-  //   id: 'chats',
-  //   icon: chatIcon,
-  //   title: "Chats",
-  //   path: '/chats'
-  // },
+  {
+    id: 'chats',
+    activeIcon: chatWhite,
+    inactiveIcon: chatIcon,
+    title: "Chats",
+    path: '/chats'
+  },
   // {
   //   id: 'marketing',
   //   icon: marketingIcon,
@@ -138,6 +140,7 @@ export const subscriptionData = [
     subType: 'Futures & Options',
     plan: "Basic",
     duration: "1 month",
+    phNum: '9910382771',
     amount: "₹1,999 ",
     activeUser: '2000',
     activeEdit: edit,
@@ -148,6 +151,7 @@ export const subscriptionData = [
     subType: 'Commodity',
     plan: "Standard",
     duration: "3 month",
+    phNum: '7129991181',
     amount: "₹5,999 ",
     activeUser: '5000',
     activeEdit: edit,

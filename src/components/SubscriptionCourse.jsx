@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { deleteIcon } from "../assets";
-import SubscriptionEditCourse from "./SubscriptionEditCourse";
+import SubscriptionEditCourse from "./SubscriptionChatDialog";
 
 const SubscriptionCourse = () => {
   const [smallScreen, setSmallScreen] = useState(false);
@@ -53,7 +53,7 @@ const SubscriptionCourse = () => {
         )}
       </div>
 
-      <div className="flex md:mt-[3rem] mt-1">
+      <div className="flex md:mt-[2rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
             {courses.map((row, index) => (
