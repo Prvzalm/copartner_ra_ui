@@ -82,31 +82,11 @@ const Chats = () => {
       <div className="flex py-[4rem]">
         <Link to="/chats/chats_history">
           <div className="flex xl:w-[1520px] md:w-[1120px] md:gap-6 gap-2">
-            <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
-              <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2 md:w-auto w-[140px] md:h-auto h-[28px]">
-                Paid Active Queries:
+            <div className="md:h-auto h-auto border border-white border-opacity-50 rounded-lg md:w-full w-[350px] p-4 flex md:flex-row flex-col justify-between md:gap-0 gap-2">
+              <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2 md:w-auto w-[160px] md:h-auto h-[25px]">
+                Chat Active Queries:
               </span>
-              <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
-                10
-              </span>
-              <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
-                5 Minutes Access
-              </span>
-              <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
-                Response
-              </button>
-            </div>
-            <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
-              <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2 md:w-auto w-[140px] md:h-auto h-[28px]">
-                Free Active Queries:
-              </span>
-              <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
-                10
-              </span>
-              <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
-                5 Minutes Access
-              </span>
-              <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
+              <button className="px-4 py-2 md:w-[20%] w-full bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
                 Response
               </button>
             </div>

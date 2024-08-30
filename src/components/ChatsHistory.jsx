@@ -25,7 +25,7 @@ const ChatsHistory = () => {
   const [showHistoryButtons, setShowHistoryButtons] = useState(false);
   const [chatUserList, setChatUserList] = useState([]);
   const [activeTab, setActiveTab] = useState("Active");
-  const [activeSubTab, setActiveSubTab] = useState("Premium");
+  const [activeSubTab, setActiveSubTab] = useState("Free");
   const [currentPaidPlanId, setCurrentPaidPlanId] = useState("");
   const [chatPlan, setChatPlan] = useState(null);
   const [currentPlanType, setCurrentPlanType] = useState("");
@@ -95,42 +95,84 @@ const ChatsHistory = () => {
       } = await axios.get(
         `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatUsersById/${stackholderId}`
       );
-
-      const filteredUsers = users.filter((user) => user.userType === "UR");
-
+  
+      const filteredUsers = users.filter((user) => {
+        // Filter users based on activeTab state
+        if (activeTab === "Active") {
+          return user.isActive === true;
+        } else if (activeTab === "History") {
+          return user.isActive === false;
+        }
+        return false; // Default case, should not occur
+      });
+  
       const userDetailsPromises = filteredUsers.map((user) =>
         axios.get(`https://copartners.in:5131/api/User/${user.id}`)
       );
-
+  
       const userDetailsResponses = await Promise.all(userDetailsPromises);
-
-      const chatUsers = userDetailsResponses.map((response) => {
+  
+      const chatUsers = userDetailsResponses.map((response, index) => {
         const userDetails = response.data.data;
+        const planTypeLabel = getPlanTypeLabel(filteredUsers[index].planType);
+  
+        // Get duration for the planId or set to 2 minutes if planType is "D"
+        const duration =
+          filteredUsers[index].planType === "D"
+            ? 2
+            : getPlanDuration(filteredUsers[index].planId);
+  
         return {
           chatUserImg: userDetails.userImagePath || chatUser1,
           chatUserName: userDetails.name,
           mobileNumber: userDetails.mobileNumber,
-          subType: "D",
+          timestamp: filteredUsers[index].timestamp,
+          planTypeLabel: planTypeLabel,
+          duration: duration,
+          planType: filteredUsers[index].planType,
+          isActive: filteredUsers[index].isActive, // Add isActive to user data
         };
       });
-
+  
+      // Sort users by timestamp in descending order
+      chatUsers.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  
       setChatUserList(chatUsers);
     } catch (error) {
       console.error("Error fetching chat users:", error);
     }
+  };  
+
+  useEffect(() => {
+    if (chatPlan) {
+      fetchChatUsers();
+    }
+  }, [chatPlan]);
+
+  // Helper function to map planType to a label
+  const getPlanTypeLabel = (planType) => {
+    switch (planType) {
+      case "D":
+        return "Default";
+      case "F":
+        return "Free";
+      case "P":
+        return "Premium";
+      default:
+        return "No Subscription";
+    }
   };
 
-  // Polling to auto-refresh chat user list
+  // Helper function to get plan duration by planId
+  const getPlanDuration = (planId) => {
+    const plan = chatPlan?.find((plan) => plan.id === planId);
+    return plan ? plan.duration : "Unknown";
+  };
+
   useEffect(() => {
     const interval = setInterval(fetchChatUsers, 2000);
     return () => clearInterval(interval);
-  }, [stackholderId]);
-
-  useEffect(() => {
-    if (stackholderId) {
-      fetchChatUsers();
-    }
-  }, [stackholderId]);
+  }, [stackholderId, chatPlan,activeTab]);
 
   useEffect(() => {
     const storedPlanType = sessionStorage.getItem("planType");
@@ -177,23 +219,24 @@ const ChatsHistory = () => {
                 [storedActiveUserMobile]: removedCountdown,
                 ...remainingCountdowns
               } = prevCountdowns;
-              sessionStorage.setItem(
-                "countdowns",
-                JSON.stringify(remainingCountdowns)
-              );
 
-              sessionStorage.removeItem("planType");
-              sessionStorage.removeItem("planId");
-              sessionStorage.removeItem("paidPlanId");
-              sessionStorage.removeItem("startTime");
-              sessionStorage.removeItem("endTime");
-              sessionStorage.removeItem("activeUserMobile");
+              // Clear countdowns when empty
+              if (Object.keys(remainingCountdowns).length === 0) {
+                sessionStorage.removeItem("planType");
+                sessionStorage.removeItem("planId");
+                sessionStorage.removeItem("paidPlanId");
+                sessionStorage.removeItem("startTime");
+                sessionStorage.removeItem("endTime");
+                sessionStorage.removeItem("activeUserMobile");
+                sessionStorage.removeItem("countdowns");
 
-              setCurrentPlanType("");
-              setCurrentPlanId("");
-              setCurrentPaidPlanId("");
-
-              setIsSendMessageDisabled(true);
+                setIsSendMessageDisabled(true);
+              } else {
+                sessionStorage.setItem(
+                  "countdowns",
+                  JSON.stringify(remainingCountdowns)
+                );
+              }
 
               return remainingCountdowns;
             }
@@ -469,21 +512,28 @@ const ChatsHistory = () => {
 
           const { [mobileNumber]: removedCountdown, ...remainingCountdowns } =
             prevCountdowns;
-          sessionStorage.setItem(
-            "countdowns",
-            JSON.stringify(remainingCountdowns)
-          );
 
-          sessionStorage.removeItem("planType");
-          sessionStorage.removeItem("planId");
-          sessionStorage.removeItem("startTime");
-          sessionStorage.removeItem("endTime");
-          sessionStorage.removeItem("activeUserMobile");
+          // Clear session storage when countdowns is empty
+          if (Object.keys(remainingCountdowns).length === 0) {
+            sessionStorage.removeItem("planType");
+            sessionStorage.removeItem("planId");
+            sessionStorage.removeItem("paidPlanId");
+            sessionStorage.removeItem("startTime");
+            sessionStorage.removeItem("endTime");
+            sessionStorage.removeItem("activeUserMobile");
+            sessionStorage.removeItem("countdowns");
 
-          setCurrentPlanType("");
-          setCurrentPlanId("");
+            setCurrentPlanType("");
+            setCurrentPlanId("");
+            setCurrentPaidPlanId("");
 
-          setIsSendMessageDisabled(true);
+            setIsSendMessageDisabled(true);
+          } else {
+            sessionStorage.setItem(
+              "countdowns",
+              JSON.stringify(remainingCountdowns)
+            );
+          }
 
           return remainingCountdowns;
         }
@@ -569,15 +619,17 @@ const ChatsHistory = () => {
 
   const handleActiveClick = () => {
     setActiveTab("Active");
-    setActiveSubTab("Premium");
+    setActiveSubTab("Free");
     setShowHistoryButtons(false);
+    fetchChatUsers(); // Fetch data only when Active tab is clicked
   };
-
+  
   const handleHistoryClick = () => {
     setActiveTab("History");
     setActiveSubTab("PremiumHistory");
     setShowHistoryButtons(true);
-  };
+    fetchChatUsers(); // Fetch data only when History tab is clicked
+  };  
 
   const selectUser = (user) => {
     setActiveUser(user);
@@ -597,6 +649,16 @@ const ChatsHistory = () => {
     const secs = seconds % 60;
     return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
+
+  // Filter chatUserList based on activeSubTab
+  const filteredChatUserList = chatUserList.filter((user) => {
+    if (activeSubTab === "Premium") {
+      return user.planType === "P";
+    } else if (activeSubTab === "Free") {
+      return user.planType === "D" || user.planType === "F";
+    }
+    return true; // Default case, if needed
+  });
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
@@ -624,7 +686,7 @@ const ChatsHistory = () => {
                   }`}
                   onClick={handleActiveClick}
                 >
-                  Active
+                  Chats
                 </div>
                 <div
                   className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
@@ -641,6 +703,16 @@ const ChatsHistory = () => {
                 <ul className="flex flex-row md:gap-10 gap-4">
                   {activeTab === "Active" && (
                     <>
+                    <li
+                        className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                          activeSubTab === "Free"
+                            ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                            : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                        }`}
+                        onClick={() => setActiveSubTab("Free")}
+                      >
+                        Free
+                      </li>
                       <li
                         className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
                           activeSubTab === "Premium"
@@ -651,47 +723,14 @@ const ChatsHistory = () => {
                       >
                         Premium
                       </li>
-                      <li
-                        className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
-                          activeSubTab === "Free"
-                            ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
-                            : "bg-transparent text-white font-[600] font-inter text-[12px]"
-                        }`}
-                        onClick={() => setActiveSubTab("Free")}
-                      >
-                        Free
-                      </li>
-                    </>
-                  )}
-                  {activeTab === "History" && (
-                    <>
-                      <li
-                        className={`w-[120px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
-                          activeSubTab === "PremiumHistory"
-                            ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
-                            : "bg-transparent text-white font-[600] font-inter text-[12px]"
-                        }`}
-                        onClick={() => setActiveSubTab("PremiumHistory")}
-                      >
-                        Premium History
-                      </li>
-                      <li
-                        className={`w-[120px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
-                          activeSubTab === "FreeHistory"
-                            ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
-                            : "bg-transparent text-white font-[600] font-inter text-[12px]"
-                        }`}
-                        onClick={() => setActiveSubTab("FreeHistory")}
-                      >
-                        Free History
-                      </li>
+                      
                     </>
                   )}
                 </ul>
               </div>
             </div>
             <div className="w-[362px] max-h-[500px] flex gap-4 flex-col mt-4 overflow-y-auto">
-              {chatUserList.map((users) => {
+              {filteredChatUserList.map((users) => {
                 const isActive =
                   activeUser && activeUser.mobileNumber === users.mobileNumber;
                 return (
@@ -720,7 +759,7 @@ const ChatsHistory = () => {
                       </div>
                       <div className="flex gap-4">
                         <span className="text-white opacity-[50%] font-[500] font-inter text-[15px] leading-[23px]">
-                          {users.subType}
+                          {users.planTypeLabel} ({users.duration} mins)
                         </span>
                       </div>
                     </div>
