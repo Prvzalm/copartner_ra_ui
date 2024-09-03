@@ -88,7 +88,7 @@ const Chats = () => {
         </Link>
       </div>
 
-      <div className="flex flex-row items-center">
+      {/* <div className="flex flex-row items-center">
         <div className="xl:w-[1420px] md:w-[1030px] flex flex-col gap-8 mt-4">
           <div className="flex justify-between md:flex-row flex-col md:gap-0 gap-2">
             <span className="text-white md:w-[210px] h-[27px] font-inter font-[600] text-[22px] md:leading-[27px] md:items-center items-start">
@@ -115,9 +115,9 @@ const Chats = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="flex md:mt-[2rem] mt-1">
+      {/* <div className="flex md:mt-[2rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
             {subscriptionData.map((row, index) => (
@@ -191,7 +191,7 @@ const Chats = () => {
             </tbody>
           </table>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };
