@@ -2,15 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { subscriptionData } from "../constants";
-import DatePicker from "react-datepicker";
 
 const Chats = () => {
   const [smallScreen, setSmallScreen] = useState(false);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
   const [isChatLive, setIsChatLive] = useState(false);
-  const [expertData, setExpertData] = useState(null);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -31,6 +26,13 @@ const Chats = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  useEffect(() => {
+    const storedIsChatLive = sessionStorage.getItem("isChatLive");
+    if (storedIsChatLive !== null) {
+      setIsChatLive(JSON.parse(storedIsChatLive));
+    }
+  }, []);
+
   const isChatLiveApi = `https://copartners.in:5132/api/Experts?Id=${stackholderId}`;
 
   const handleCheckboxChange = async () => {
@@ -48,6 +50,13 @@ const Chats = () => {
       toast.success("Chat status updated successfully!", {
         position: "top-right",
       });
+
+      // Save or delete isChatLive in sessionStorage
+      if (newValue) {
+        sessionStorage.setItem("isChatLive", JSON.stringify(newValue));
+      } else {
+        sessionStorage.removeItem("isChatLive");
+      }
     } catch (error) {
       toast.error("Failed to update chat status!", {
         position: "top-right",
@@ -87,111 +96,6 @@ const Chats = () => {
           </div>
         </Link>
       </div>
-
-      {/* <div className="flex flex-row items-center">
-        <div className="xl:w-[1420px] md:w-[1030px] flex flex-col gap-8 mt-4">
-          <div className="flex justify-between md:flex-row flex-col md:gap-0 gap-2">
-            <span className="text-white md:w-[210px] h-[27px] font-inter font-[600] text-[22px] md:leading-[27px] md:items-center items-start">
-              Customer Listing
-            </span>
-
-            <div className="flex items-center flex-row md:gap-10 gap-8 md:mr-[-6rem] mr-0">
-              <div className="ml-0">
-                <DatePicker
-                  selected={startDate}
-                  startDate={startDate}
-                  endDate={endDate}
-                  selectsRange
-                  isClearable
-                  placeholderText="Select Date range"
-                  className="bg-[#2E323C] h-[55px] text-white rounded-[10px] px-4 md:w-[200px] w-[180px]"
-                />
-              </div>
-              <button
-                className={`w-[140px] h-[40px] text-[14px] rounded-[10px] border-solid border-[1px] border-white text-white`}
-              >
-                Download Sheet
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-      {/* <div className="flex md:mt-[2rem] mt-1">
-        {smallScreen ? (
-          <div className="flex flex-wrap justify-center items-center ml-[-22px]">
-            {subscriptionData.map((row, index) => (
-              <div
-                key={index}
-                className="flex flex-col justify-around h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
-              >
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  {row.transactioId}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DATE:</span> {row.date}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">USER NUMBER:</span>{" "}
-                  {row.phNum}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">TIME:</span> {row.duration}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">AMOUNT:</span> {row.amount}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">ADD ON:</span> {row.subType}
-                </span>
-              </div>
-            ))}
-            <button className="mt-6 md:w-[147px] md:h-[40px] md:flex items-center justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite md:text-[14px] text-[10px] font-[500] md:leading-[16px] leading-[12px]">
-              Show More
-            </button>
-          </div>
-        ) : (
-          <table className="xl:w-[1520px] md:w-[1130px] h-[230px] bg-[#29303F] rounded-[30px]">
-            <thead className="text-[#BABABA] font-inter font-[600] text-[14px] leading-[20px] h-[51px]">
-              <tr>
-                <th className="text-center">TRANSACTION ID</th>
-                <th className="text-center">DATE</th>
-                <th className="text-center">USER NUMBER</th>
-                <th className="text-center">TIME</th>
-                <th className="text-center">AMOUNT</th>
-                <th className="text-center">ADD ON</th>
-              </tr>
-            </thead>
-            <tbody className="text-lightWhite h-[81px]">
-              {subscriptionData.map((row, index) => (
-                <tr
-                  key={index}
-                  className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
-                >
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.transactioId}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.date}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.phNum}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.duration}
-                  </td>
-                  <td className="py-2 text-center font-[500] text-[16px] leading-[18px]">
-                    {row.amount}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.subType}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div> */}
     </div>
   );
 };
