@@ -25,7 +25,7 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
     const fetchPlans = async () => {
       try {
         const response = await axios.get(
-          `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
+          `https://copartners.in:5137/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
         );
 
         // Log the entire response for debugging
@@ -115,7 +115,7 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
 
     try {
       const response = await axios.patch(
-        `https://copartners.in/Featuresservice/api/ChatConfiguration?Id=${subID}`,
+        `https://copartners.in:5137/api/ChatConfiguration?Id=${subID}`,
         patchData,
         {
           headers: {

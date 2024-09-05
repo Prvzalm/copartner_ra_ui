@@ -12,7 +12,7 @@ const SubscriptionChat = () => {
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
-  const CHAT_SERVICE_API = `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`;
+  const CHAT_SERVICE_API = `https://copartners.in:5137/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`;
 
   const axiosServiceData = async () => {
     try {
@@ -43,7 +43,7 @@ const SubscriptionChat = () => {
   };
 
   const handleDelete = async (id) => {
-    const DELETE_API = `https://copartners.in/Featuresservice/api/ChatConfiguration/${id}`;
+    const DELETE_API = `https://copartners.in:5137/api/ChatConfiguration/${id}`;
     try {
       await axios.delete(DELETE_API);
       setChat(prevChat => prevChat.filter(course => course.id !== id));

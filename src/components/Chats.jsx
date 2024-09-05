@@ -11,14 +11,12 @@ const Chats = () => {
 
   const expertAPI = `https://copartners.in:5132/api/Experts/${stackholderId}`;
 
-  // Fetch expert data and isChatLive status
   useEffect(() => {
     const fetchExpertData = async () => {
       try {
         const response = await axios.get(expertAPI);
         const expertData = response.data.data;
-        setIsChat(expertData.isChatLive); // Set isChat based on the fetched isChatLive status
-        // sessionStorage.setItem("isChatLive", JSON.stringify(expertData.isChatLive));
+        setIsChat(expertData.isChatLive);
       } catch (error) {
         toast.error("Failed to fetch expert data", { position: "top-right" });
       }
@@ -41,22 +39,21 @@ const Chats = () => {
   const isChatLiveApi = `https://copartners.in:5132/api/Experts?Id=${stackholderId}`;
 
   const handleCheckboxChange = async () => {
-    const newValue = !isChat; // Toggle isChat state
-    setIsChat(newValue); // Update the local state
+    const newValue = !isChat; 
+    setIsChat(newValue); 
 
     try {
       await axios.patch(isChatLiveApi, [
         {
           path: "isChatLive",
           op: "replace",
-          value: newValue, // Send the updated isChatLive value to the API
+          value: newValue,
         },
       ]);
       toast.success("Chat status updated successfully!", {
         position: "top-right",
       });
 
-      // Save or delete isChatLive in sessionStorage
       if (newValue) {
         sessionStorage.setItem("isChatLive", JSON.stringify(newValue));
       } else {

@@ -75,7 +75,7 @@ const ChatsHistory = () => {
     const fetchChatPlan = async () => {
       try {
         const { data } = await axios.get(
-          `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}`
+          `https://copartners.in:5137/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
         );
         setChatPlan(data.data);
       } catch (error) {
@@ -93,7 +93,7 @@ const ChatsHistory = () => {
       const {
         data: { data: users },
       } = await axios.get(
-        `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatUsersById/${stackholderId}`
+        `https://copartners.in:5137/api/ChatConfiguration/GetChatUsersById/${stackholderId}`
       );
   
       const filteredUsers = users.filter((user) => {
@@ -266,7 +266,7 @@ const ChatsHistory = () => {
       const receiver = user.mobileNumber;
       const connection = new signalR.HubConnectionBuilder()
         .withUrl(
-          `https://copartners.in/FeaturesService/chathub?username=${encodeURIComponent(
+          `https://copartners.in:5137/chathub?username=${encodeURIComponent(
             email
           )}&chatPartnerUsername=${encodeURIComponent(receiver)}`
         )

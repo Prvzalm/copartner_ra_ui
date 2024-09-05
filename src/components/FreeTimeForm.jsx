@@ -70,7 +70,7 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
 
     try {
       const response = await axios.post(
-        "https://copartners.in/Featuresservice/api/ChatConfiguration",
+        "https://copartners.in:5137/api/ChatConfiguration",
         {
           expertsId: stackholderId,
           subscriptionType,
