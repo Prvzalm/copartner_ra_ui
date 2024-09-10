@@ -850,6 +850,11 @@ const ChatsHistory = () => {
                   className="flex-grow h-[43px] bg-[#1F2735] text-white placeholder-gray-400 px-4 rounded-[6px] focus:outline-none border-none"
                   value={messageInput}
                   onChange={(e) => setMessageInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter" && !isSendMessageDisabled) {
+                      handleSendMessage(e);
+                    }
+                  }}
                   disabled={isSendMessageDisabled}
                 />
                 <button
