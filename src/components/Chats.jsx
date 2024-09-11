@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ChatsHistory from "./ChatsHistory";
 
 const Chats = () => {
   const [smallScreen, setSmallScreen] = useState(false);
@@ -67,7 +68,8 @@ const Chats = () => {
   };
 
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+    <>
+    <div className="xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:pt-[6rem] pt-[8rem] bg-gradient">
       <div className="xl:w-[1520px] md:w-[1130px] w-[370px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
           Chats Status
@@ -84,7 +86,7 @@ const Chats = () => {
         </label>
       </div>
 
-      <div className="flex py-[4rem]">
+      {/* <div className="flex pt-[4rem]">
         <Link to="/chats/chats_history">
           <div className="flex xl:w-[1520px] md:w-[1120px] md:gap-6 gap-2">
             <div className="md:h-auto h-auto border border-white border-opacity-50 rounded-lg md:w-full w-[350px] p-4 flex md:flex-row flex-col justify-between md:gap-0 gap-2">
@@ -97,8 +99,11 @@ const Chats = () => {
             </div>
           </div>
         </Link>
-      </div>
+      </div> */}
     </div>
+
+    <ChatsHistory />
+    </>
   );
 };
 

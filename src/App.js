@@ -88,7 +88,7 @@ function App() {
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/chats" element={<Chats />} />
-              <Route path="/chats/chats_history" element={<ChatsHistory />} />
+              {/* <Route path="/chats/chats_history" element={<ChatsHistory />} /> */}
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
               {telegramData.length > 0 && <Route path="/telegram_channel" element={<TelegramChannel />} />}

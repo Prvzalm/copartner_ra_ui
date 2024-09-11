@@ -661,38 +661,31 @@ const ChatsHistory = () => {
   });
 
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+    <div className="xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[3rem] py-[2rem] bg-gradient min-h-screen">
       <div
         className={`flex ${
           smallScreen ? "flex-col" : "flex-row"
         } bg-[#272F3D] p-4 rounded-[18px] xl:w-[1520px] md:w-[1100px] w-[360px] gap-12`}
       >
         {(!smallScreen || !activeUser) && (
-          <div className="w-[300px] h-auto bg-[#272F3D]">
+          <div className="w-[300px] h-[560px] bg-[#272F3D]">
             <div className="flex flex-col gap-4 justify-between">
-              <div className="flex gap-4 md:ml-[-1rem] ml-0">
-                <Link to="/chats" className="flex flex-row items-center gap-2">
-                  <img
-                    src={backImg}
-                    alt=""
-                    className="w-[26px] h-[26px] md:hidden flex"
-                  />
-                </Link>
+              <div className="flex gap-4 md:ml-[1px] ml-0 bg-white p-2 w-[330px] rounded-[12px]">
                 <div
-                  className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                  className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] text-black ${
                     activeTab === "Active"
-                      ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
-                      : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                      ? "bg-blue-500 text-white font-[600] font-inter text-[12px]"
+                      : "bg-transparent font-[600] font-inter text-[12px]"
                   }`}
                   onClick={handleActiveClick}
                 >
                   Chats
                 </div>
                 <div
-                  className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                  className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] text-black ${
                     activeTab === "History"
-                      ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
-                      : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                      ? "bg-blue-500 text-white font-[600] font-inter text-[12px]"
+                      : "bg-transparent font-[600] font-inter text-[12px]"
                   }`}
                   onClick={handleHistoryClick}
                 >
@@ -781,7 +774,7 @@ const ChatsHistory = () => {
                       className="text-white mb-4"
                     >
                       <img
-                        src={chatUser1}
+                        src={backImg}
                         className="w-[30px] h-[30px]"
                         alt="back"
                       />
@@ -865,7 +858,7 @@ const ChatsHistory = () => {
                   <img
                     src={sendChat}
                     alt="Send"
-                    className="md:w-[35px] md:h-[35px]"
+                    className="md:w-[35px] w-[23px] h-[23px] md:h-[35px]"
                   />
                 </button>
               </div>
