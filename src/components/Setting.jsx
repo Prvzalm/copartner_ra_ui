@@ -168,7 +168,7 @@ const Setting = () => {
   };
 
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+    <div className="pb-[5rem] xl:pl-[18rem] md:pl-[16rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1530px] md:w-[1122px] xl -h-[480px] md:h-[580px] w-[361px] h-[650px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
         <div className="flex flex-col">
           <div className="flex flex-row">

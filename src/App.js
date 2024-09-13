@@ -63,7 +63,7 @@ function App() {
   }, []);
 
   return (
-    <div className={`bg-gradient overflow-hidden ${styles.boxWidth}`}>
+    <div className={`bg-gradient overflow-hidden`}>
       <div className="flex">
         <div className="flex-grow">
           <>

@@ -72,13 +72,11 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
 
   return (
     <div
-      className={`fixed flex justify-center items-center py-[1rem] ${
-        styles.boxWidth
-      } z-[99] ${
+      className={`fixed flex w-full justify-center items-center py-[1rem] z-[99] ${
         isScrolled ? styles.transparentNavbar : styles.scrolledNavbar
       }`}
     >
-      <nav className="flex md:w-[600px] md:ml-[5rem] xl:ml-[20rem] ml-8">
+      <nav className="flex md:w-[600px] md:ml-[15rem] xl:ml-[20rem] ml-8">
         <div
           onClick={scrollToTop}
           className="flex md:flex-row flex-col items-center sm:flex-col gap-[4px] md:gap-20 xl:gap-40"

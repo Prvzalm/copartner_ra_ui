@@ -96,8 +96,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] xl:py-[6rem] md:pt-[8rem] pt-[6rem]">
-      <div className="flex xl:w-[1580px] md:w-[1180px] items-center">
+    <div className="xl:pl-[18rem] md:pl-[16rem] pl-6 md:py-[6rem] xl:py-[6rem] md:pt-[8rem] pt-[6rem]">
+      <div className="flex items-center">
         <div className="">
           <div className="flex items-center md:gap-0 gap-10">
             <h2 className="md:w-[176px] md:h-[27px] w-[125px] h-[28px] font-inter md:text-[22px] text-[20px] font-[600] leading-[27px] text-white">

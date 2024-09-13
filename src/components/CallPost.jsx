@@ -50,7 +50,7 @@ const CallPost = () => {
   };
 
   const openDialog = () => {
-    setIsDialogOpen(true); //
+    setIsDialogOpen(true); 
   };
 
   const openExitDialog = () => {
@@ -79,8 +79,8 @@ const CallPost = () => {
   };
 
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
-      <div className="flex md:flex-row flex-row md:justify-between items-center md:gap-0 gap-10">
+    <div className="pb-[5rem] xl:pl-[18rem] md:pl-[16rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+      <div className="flex md:flex-row flex-row items-center md:gap-[50rem] gap-10">
         <span className="font-inter text-[22px] font-[600] leading-[27px] text-white">
           Story
         </span>
@@ -117,7 +117,7 @@ const CallPost = () => {
         <span className="text-white text-[22px] font-[600] leading-[26.5px]">
           Free Calls
         </span>
-        <div className="flex md:flex-row flex-col md:justify-between md:items-center md:gap-0 gap-2">
+        <div className="flex md:flex-row flex-col md:items-center md:gap-[39rem] gap-2">
           <div className="flex flex-row md:gap-4 gap-8">
             <button
               onClick={() => setShowSubscriptionType("1")}

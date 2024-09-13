@@ -52,7 +52,7 @@ const PremiumCallPost = () => {
         <span className="text-white text-[22px] font-[600] leading-[26.5px]">
           Premium Calls
         </span>
-        <div className="flex md:flex-row flex-col md:justify-between md:items-center md:gap-0 gap-2">
+        <div className="flex md:flex-row flex-col md:items-center md:gap-[39rem] gap-2">
           <div className="flex flex-row md:gap-4 gap-8">
             <button
               onClick={() => setShowSubscriptionType("1")}

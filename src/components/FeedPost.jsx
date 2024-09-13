@@ -1,14 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
+import FollowerFeedDialog from "./FollowerFeedDialog";
 
 const FeedPost = () => {
+  const [isFollowerDialog, setIsFollowerDialog] = useState(false);
+  const [isUploadPostDialog, setIsUploadPostDialog] = useState(false);
+
+  const openFollwerDialog = () => {
+    setIsFollowerDialog(true);
+  };
+
+  const openUploadPostDialog = () => {
+    setIsUploadPostDialog(true);
+  };
+
+  const closeDialog = () => {
+    setIsFollowerDialog(false);
+    
+  };
+
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
-      <div className="md:w-full w-[350px]  border border-[#29303F] rounded-[16px] md:h-[75px] md:ml-0 ml-0">
+    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[16rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+      <div className="md:w-[1100px] w-[350px]  border border-[#29303F] rounded-[16px] md:h-[75px] md:ml-0 ml-0">
         <div className="flex items-center justify-between py-5 px-4">
-            <span className="text-white font-[600] md:text-[22px] leading-[26px]">App Followers: 3000</span>
-            <button className="border-solid border-[1px] border-white opacity-[60%] rounded-[20px] w-[92px] h-[32px]">
-                <span className="text-white font-[500] leading-[16px] text-[15px]">See All</span>
-            </button>
+          <span className="text-white font-[600] md:text-[22px] leading-[26px]">
+            App Followers: 3000
+          </span>
+          <button onClick={openFollwerDialog} className="border-solid border-[1px] border-white opacity-[60%] rounded-[20px] w-[92px] h-[32px]">
+            <span className="text-white font-[500] leading-[16px] text-[15px]">
+              See All
+            </span>
+          </button>
+          {isFollowerDialog && (
+            <FollowerFeedDialog
+              isDialogOpen={isFollowerDialog}
+              closeDialog={closeDialog}
+            />
+          )}
         </div>
       </div>
 

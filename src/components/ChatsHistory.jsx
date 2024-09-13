@@ -661,7 +661,7 @@ const ChatsHistory = () => {
   });
 
   return (
-    <div className="xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[3rem] py-[2rem] bg-gradient min-h-screen">
+    <div className="xl:pl-[18rem] md:pl-[16rem] pl-[1rem] md:py-[3rem] py-[2rem] bg-gradient min-h-screen">
       <div
         className={`flex ${
           smallScreen ? "flex-col" : "flex-row"

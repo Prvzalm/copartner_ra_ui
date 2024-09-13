@@ -69,7 +69,7 @@ const Chats = () => {
 
   return (
     <>
-    <div className="xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:pt-[6rem] pt-[8rem] bg-gradient">
+    <div className="xl:pl-[18rem] md:pl-[16rem] pl-[1rem] md:pt-[6rem] pt-[8rem] bg-gradient">
       <div className="xl:w-[1520px] md:w-[1130px] w-[370px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
           Chats Status
