@@ -174,8 +174,41 @@ const Wallet = () => {
   const handleDateChange = (dates) => {
     const [start, end] = dates;
     setStartDate(start);
-    setEndDate(end);
+    
+    // If there's an end date, set the time to the end of the day (23:59:59) for accurate filtering.
+    if (end) {
+      const adjustedEndDate = new Date(end);
+      adjustedEndDate.setHours(23, 59, 59, 999);
+      setEndDate(adjustedEndDate);
+    } else {
+      setEndDate(null);
+    }
   };
+  
+  useEffect(() => {
+    const filterTransactions = () => {
+      let filtered = transactionTable;
+  
+      if (searchInput) {
+        filtered = filtered.filter((row) =>
+          row.user.mobileNumber.includes(searchInput)
+        );
+      }
+  
+      if (startDate && endDate) {
+        filtered = filtered.filter((row) => {
+          const subscribeDate = new Date(row.subscribeDate);
+          return subscribeDate >= startDate && subscribeDate <= endDate;
+        });
+      }
+  
+      setFilteredTransactions(filtered);
+      setCurrentPage(1); // Reset to first page when filtering
+    };
+  
+    filterTransactions();
+  }, [searchInput, startDate, endDate, transactionTable]);
+  
 
   useEffect(() => {
     const filterTransactions = () => {
