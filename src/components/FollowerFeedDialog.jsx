@@ -30,9 +30,9 @@ const totalFollowers = [
 
 const FollowerFeedDialog = ({ closeDialog }) => {
   return (
-    <div className="fixed inset-0 z-[999] flex items-center justify-center">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center overflow-y-auto">
       <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg md:w-[430px] w-[278px] md:h-auto h-[360px] overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg md:w-[430px] w-[278px] md:h-[450px] h-[360px] overflow-auto p-8">
           <div className="flex items-center justify-between">
             <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
               Followers
