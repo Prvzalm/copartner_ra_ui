@@ -48,11 +48,11 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar, telegramData }) => {
 
   return (
     <div
-      className={`fixed flex flex-col bg-gradient md:w-[210px] h-[100%] ml-[-4rem] py-[2rem] mb-[1rem] z-[999] ${
+      className={`fixed flex flex-col bg-gradient md:w-[210px] h-[100%] py-[2rem] px-[2rem] mb-[1rem] z-[999] ${
         window.innerWidth < 768
           ? "w-[120%] flex justify-center items-center"
           : ""
-      }`}
+      } overflow-y-auto`}
     >
       <button
         onClick={handleClose}
@@ -84,12 +84,12 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar, telegramData }) => {
                   setActiveTab(side.title);
                   handleSidebarTabClick();
                 }}
-                className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row cursor-pointer ${
+                className={`flex w-auto h-[74px] rounded-[16px] text-white flex-row cursor-pointer ${
                   window.innerWidth >= 768 ? "md:ml-[-4rem] xl:ml-[-4rem]" : ""
                 } ${
                   window.innerWidth >= 768 &&
                   (activeTab === side.title
-                    ? "tab-btn text-[#fff]"
+                    ? "tab-btn text-[#fff] px-4"
                     : "text-white opacity-[50%]")
                 }`}
               >

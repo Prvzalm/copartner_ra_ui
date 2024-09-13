@@ -15,6 +15,8 @@ import Chats from "./components/Chats";
 import ChatsHistory from "./components/ChatsHistory";
 import TelegramChannel from "./components/TelegramChannel";
 import StandardQues from "./components/StandardQues";
+import CallPost from "./components/CallPost";
+import FeedPost from "./components/FeedPost";
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
@@ -61,7 +63,7 @@ function App() {
   }, []);
 
   return (
-    <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX} overflow-hidden`}>
+    <div className={`bg-gradient overflow-hidden ${styles.boxWidth}`}>
       <div className="flex">
         <div className="flex-grow">
           <>
@@ -84,7 +86,9 @@ function App() {
                 }
               />
               <Route path="/analysis_board" element={<AnalysisBoard />} />
-              <Route path="/webinar" element={<Webinar />} />
+              <Route path="/call_post" element={<CallPost />} />
+              <Route path="/feed_post" element={<FeedPost />} />
+              {/* <Route path="/webinar" element={<Webinar />} /> */}
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/chats" element={<Chats />} />
