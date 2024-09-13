@@ -134,7 +134,7 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
   return (
     <div className="flex flex-col gap-4 md:w-[1006px]">
       <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
-        <div className="relative">
+        {/* <div className="relative">
           <label
             htmlFor="subscriptionType"
             className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
@@ -184,7 +184,7 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
         <div className="relative">
           <label
             htmlFor="planType"
@@ -198,7 +198,7 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
               id="planName"
               value={planName}
               onChange={(e) => setPlanName(e.target.value)}
-              className="md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+              className="md:w-[1010px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
               placeholder="Enter Plan Name"
             />
           </div>

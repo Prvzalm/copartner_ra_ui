@@ -174,9 +174,9 @@ const SubscriptionChatDiscount = () => {
                   <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                     <span className="text-dimWhite">PLAN TYPE:</span> {row.planType}
                   </span>
-                  <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                  {/* <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                     <span className="text-dimWhite">SUBSCRIPTION TYPE:</span> {row.subscriptionType}
-                  </span>
+                  </span> */}
                 </div>
               ))
             )}
@@ -194,7 +194,7 @@ const SubscriptionChatDiscount = () => {
                 <th className="text-center">PRICE</th>
                 <th className="text-center">DISCOUNT %</th>
                 <th className="text-center">PLAN TYPE</th>
-                <th className="text-center">SUBSCRIPTION TYPE</th>
+                {/* <th className="text-center">SUBSCRIPTION TYPE</th> */}
                 <th className="text-center">ACTION</th>
               </tr>
             </thead>
@@ -226,9 +226,9 @@ const SubscriptionChatDiscount = () => {
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
                       {row.planType}
                     </td>
-                    <td className="font-[500] text-center text-[16px] leading-[18px]">
+                    {/* <td className="font-[500] text-center text-[16px] leading-[18px]">
                       {row.subscriptionType}
-                    </td>
+                    </td> */}
                     <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
                       <button onClick={() => handleDelete(row.id, row.planType)}>
                         <img src={deleteIcon} alt="delete" className="w-[21px] h-[21px] mx-auto flex items-center justify-center" />

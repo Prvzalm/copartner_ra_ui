@@ -8,14 +8,11 @@ import { dropdown } from "../assets";
 const DiscountForm = ({ closeDialog, addCourse }) => {
   const [plans, setPlans] = useState([]);
   const [planName, setPlanName] = useState("");
-  const [filteredPlans, setFilteredPlans] = useState([]);
   const [discountPer, setDiscountPer] = useState("");
   const [planAmt, setPlanAmt] = useState("");
   const [discountedAmount, setDiscountedAmount] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [subscriptionType, setSubscriptionType] = useState(null);
-  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
 
@@ -28,16 +25,13 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
           `https://copartners.in:5137/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
         );
 
-        // Log the entire response for debugging
-        console.log("API Response:", response);
-
         if (response.data && response.data.isSuccess) {
-          const availablePlans = response.data.data.filter(
-            (plan) => !plan.discountPercentage
-          );
-
-          console.log("My available plans", availablePlans);
+          const availablePlans = response.data.data;
           setPlans(availablePlans);
+        } else {
+          toast.error("Failed to fetch plans", {
+            position: "top-right",
+          });
         }
       } catch (error) {
         console.error("Error fetching plans:", error);
@@ -60,7 +54,7 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
 
   const handleSelectChange = (plan) => {
     setSelectedPlan(plan);
-    setPlanName(plan.planType !== "F" ? plan.planName : ""); // Only set plan name if planType is not "F"
+    setPlanName(plan.planName);
     setPlanAmt(plan.price);
     setIsDropdownOpen(false);
   };
@@ -78,15 +72,7 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
   };
 
   const handleSubmit = async () => {
-    if (
-      !planName ||
-      !discountPer ||
-      !planAmt ||
-      !discountedAmount ||
-      !startDate ||
-      !endDate ||
-      !subscriptionType
-    ) {
+    if (!planName || !discountPer || !planAmt || !discountedAmount || !startDate || !endDate) {
       toast.error("Please fill all fields", {
         position: "top-right",
       });
@@ -140,9 +126,7 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
           discountValidFrom: new Date(startDate).toISOString(),
           discountValidTo: new Date(endDate).toISOString(),
           createdOn: new Date().toISOString(),
-          serviceType: subscriptionType,
         };
-        console.log('newCourseList', newCourse.serviceType)
 
         addCourse(newCourse);
         closeDialog();
@@ -154,90 +138,9 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
     }
   };
 
-  const getSubscriptionTypeLabel = (type) => {
-    switch (type) {
-      case 1:
-        return "Commodity";
-      case 2:
-        return "Equity";
-      case 3:
-        return "Futures & Options";
-      default:
-        return "Select Subscription Type";
-    }
-  };
-
-  const toggleSubscriptionDropdown = () => {
-    setIsSubscriptionOpen(!isSubscriptionOpen);
-  };
-
-  const handleSubClick = (option) => {
-    console.log("OPTION", option);
-
-    setSubscriptionType(option);
-    setIsSubscriptionOpen(false);
-    const filtered = plans.filter(
-      (plan) => plan.subscriptionType === option.toString()
-    );
-    setFilteredPlans(filtered);
-    setPlanName(""); // Reset plan name when subscription type changes
-    setPlanAmt(""); // Reset plan amount when subscription type changes
-  };
-
   return (
     <div className="flex flex-col gap-4 md:w-[1006px]">
       <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
-        <div className="relative">
-          <label
-            htmlFor="subscriptionType"
-            className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    md:w-[140px] w-[134px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-          >
-            Subscription Type
-          </label>
-          <div className="relative">
-            <div className="relative">
-              <input
-                id="subscriptionType"
-                value={getSubscriptionTypeLabel(subscriptionType)}
-                onClick={toggleSubscriptionDropdown}
-                className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md border border-[#40495C] bg-[#282F3E] ${
-                  subscriptionType === null ? "text-[#9BA3AF]" : "text-white"
-                }`}
-                readOnly
-              />
-              <img
-                src={dropdown}
-                alt="DropDown"
-                className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
-              />
-            </div>
-            {isSubscriptionOpen && (
-              <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
-                <ul className="py-1">
-                  <li
-                    onClick={() => handleSubClick(1)}
-                    className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Commodity
-                  </li>
-                  <li
-                    onClick={() => handleSubClick(2)}
-                    className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Equity
-                  </li>
-                  <li
-                    onClick={() => handleSubClick(3)}
-                    className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Futures & Options
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
         <div className="relative">
           <label
             htmlFor="planType"
@@ -249,7 +152,7 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
           <div className="relative">
             <div
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] cursor-pointer"
+              className="md:w-[1010px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] cursor-pointer"
             >
               {planName || "Select Plan"}
             </div>
@@ -261,16 +164,14 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
             {isDropdownOpen && (
               <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
                 <ul className="py-1">
-                  {filteredPlans.map((plan) => (
-                    plan.planType !== "F" && (
-                      <li
-                        key={plan.id}
-                        onClick={() => handleSelectChange(plan)}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        {plan.planName}
-                      </li>
-                    )
+                  {plans.map((plan) => (
+                    <li
+                      key={plan.id}
+                      onClick={() => handleSelectChange(plan)}
+                      className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      {plan.planName}
+                    </li>
                   ))}
                 </ul>
               </div>

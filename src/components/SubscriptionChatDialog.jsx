@@ -93,7 +93,7 @@ const SubscriptionChatDialog = ({ closeDialog, axiosServiceData }) => {
 
           <div className="flex flex-col gap-4 md:w-[1006px]">
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
-              <div className="relative">
+              {/* <div className="relative">
                 <label
                   htmlFor="subscriptionType"
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
@@ -140,7 +140,7 @@ const SubscriptionChatDialog = ({ closeDialog, axiosServiceData }) => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               <div className="relative">
                 <div className="mb-0">
@@ -155,7 +155,7 @@ const SubscriptionChatDialog = ({ closeDialog, axiosServiceData }) => {
                     value={planName}
                     onChange={(e) => setPlanName(e.target.value)}
                     id="default-input"
-                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                    className="md:w-[1010px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                   />
                 </div>
               </div>

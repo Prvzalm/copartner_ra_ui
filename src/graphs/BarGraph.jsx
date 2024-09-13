@@ -33,6 +33,19 @@ const BarGraph = ({
     return [year, month, day].join("-");
   };
 
+  // This function formats the date for display in the X-axis
+  const formatMonthDay = (dateString) => {
+    const date = new Date(dateString);
+    if (!isNaN(date)) {
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    }
+    // Return the original string if it is not a valid date
+    return dateString;
+  };
+
   const startOfWeek = (date) => {
     const d = new Date(date);
     const day = d.getDay();
@@ -237,7 +250,7 @@ const BarGraph = ({
         }}
       >
         <CartesianGrid strokeDasharray="5 5" stroke="transparent" />
-        <XAxis dataKey="name" stroke="#fff" />
+        <XAxis dataKey="name" stroke="#fff" tickFormatter={formatMonthDay} />
         <YAxis stroke="#fff" />
         <Tooltip content={<CustomTooltip />} />
         <Legend wrapperStyle={{ color: "#fff" }} />
