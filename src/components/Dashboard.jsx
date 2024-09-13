@@ -347,7 +347,7 @@ const Dashboard = () => {
             endDate={endDate}
           />
 
-          <div className="py-8 flex flex-col gap-4 md:mt-0 mt-[-2rem]">
+          {/* <div className="py-8 flex flex-col gap-4 md:mt-0 mt-[-2rem]">
             <span className="font-inter font-[600] text-[22px] leading-[27px] w-[246px] h-[27px] text-white">
               Subscription : Services
             </span>
@@ -477,7 +477,7 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

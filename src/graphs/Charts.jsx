@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -21,8 +21,6 @@ import {
   getMonth,
   compareAsc,
   isToday,
-  startOfWeek,
-  endOfWeek
 } from "date-fns";
 import PropTypes from "prop-types";
 
@@ -49,19 +47,18 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
             const monthlyData = Array(12)
               .fill()
               .map((_, index) => ({
-                name: format(new Date(2024, index, 1), "MMMM"), // Generate month names
+                name: format(new Date(2024, index, 1), "MMMM"), // Keep monthly names unchanged
                 earnings: 0,
               }));
 
             const weeklyData = [];
-
             const monthStart = startOfMonth(new Date(2024, currentMonth, 1));
             const monthEnd = endOfMonth(new Date(2024, currentMonth, 1));
             const weeks = eachWeekOfInterval({ start: monthStart, end: monthEnd });
 
             weeks.forEach((weekStart) => {
               weeklyData.push({
-                name: format(weekStart, "yyyy-MM-dd"),
+                name: format(weekStart, "MMM dd"), // Format as Month Date (e.g., Sep 01)
                 earnings: 0,
               });
             });
@@ -89,13 +86,13 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
 
                 if (isToday(date)) {
                   dailyData.push({
-                    name: format(date, "HH:mm"),
+                    name: format(date, "MMM dd HH:mm"), // Format today’s data as Month Date and time (e.g., Sep 15 14:00)
                     earnings,
                   });
                 }
 
                 if (customStartDate && customEndDate && date >= customStartDate && date <= customEndDate) {
-                  const dateString = format(date, "yyyy-MM-dd");
+                  const dateString = format(date, "MMM dd"); // Format custom range dates as Month Date
                   if (!customDataMap.has(dateString)) {
                     customDataMap.set(dateString, { name: dateString, earnings });
                   } else {
@@ -109,7 +106,6 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
               compareAsc(parseISO(a.name), parseISO(b.name))
             );
 
-            // Calculate total earnings for the custom date range
             const totalCustomEarnings = customData.reduce((acc, item) => acc + item.earnings, 0);
             const totalTodayEarnings = dailyData.reduce((acc, item) => acc + item.earnings, 0);
             const totalWeeklyEarnings = weeklyData.reduce((acc, item) => acc + item.earnings, 0);
@@ -117,7 +113,6 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
 
             setData({ daily: dailyData, weekly: weeklyData, monthly: monthlyData, custom: customData });
 
-            // Set total earnings based on the selected filter
             if (filter === "today") {
               setTotalEarnings(totalTodayEarnings);
             } else if (filter === "weekly") {
@@ -188,7 +183,7 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
     >
       {error && <div className="text-red-500">{error}</div>}
       <ResponsiveContainer>
-        <LineChart
+        <BarChart
           data={chartData}
           margin={{ top: 60, right: 30, left: 0, bottom: 5 }}
         >
@@ -197,14 +192,12 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
           <YAxis stroke="#fff" />
           <Tooltip content={<CustomTooltip />} />
           <Legend wrapperStyle={{ color: "#fff" }} />
-          <Line
-            type="monotone"
+          <Bar
             dataKey="earnings"
-            stroke="#64dfdf"
-            strokeWidth={4}
-            activeDot={{ r: 8 }}
+            fill="#64dfdf"
+            barSize={40}
           />
-        </LineChart>
+        </BarChart>
       </ResponsiveContainer>
       <div className="text-white text-lg font-semibold mt-4">
         Total Earnings: ₹{totalEarnings.toFixed(2)}

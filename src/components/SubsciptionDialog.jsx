@@ -184,7 +184,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-[620px] h-[600px] overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-auto h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
             <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
               Add New Subscription
@@ -198,7 +198,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
             </button>
           </div>
 
-          <div className="flex flex-col md:mt-0 mt-[1rem] gap-4 md:w-[1006px] md:h-[470px]">
+          <div className="flex flex-col md:mt-0 mt-[1rem] gap-4 md:w-[1006px] md:h-auto">
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:mt-6 md:ml-0 ml-[-16px]">
               <div className="relative">
                 <label
@@ -387,24 +387,9 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                 />
               </div>
             </div>
-
-            <div className="relative md:ml-0 ml-[-16px]">
-              <label className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%] w-[90px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[13px] text-center">
-                Description
-              </label>
-              <textarea
-                typeof="text"
-                onChange={(e) => setDes(e.target.value)}
-                id="des-input"
-                value={des}
-                rows="4"
-                className="block p-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] md:w-full w-[105%]"
-                placeholder="Write something here"
-              ></textarea>
-            </div>
           </div>
 
-          <div className="flex md:flex-row flex-col gap-2 justify-end md:mt-0 mt-4">
+          <div className="flex md:flex-row flex-col gap-2 justify-end  mt-4">
             <button
               onClick={handleConfirm}
               disabled={loading}

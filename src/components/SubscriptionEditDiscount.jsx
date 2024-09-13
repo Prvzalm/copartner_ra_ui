@@ -309,6 +309,7 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
                   value={planAmt}
                   onChange={(e) => setPlanAmt(e.target.value)}
                   id="default-input"
+                  disabled
                   className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
