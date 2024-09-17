@@ -3,10 +3,46 @@ import { chatIcon, closeIcon, heart, threeDots } from "../assets";
 import FollowerFeedDialog from "./FollowerFeedDialog";
 import FeedUploadPostDialog from "./FeedUploadPostDialog";
 
+const EditDeleteDialog = ({ closeDialog, position }) => {
+  return (
+    <div
+      className="absolute md:bottom-[50px] md:left-[350px] bottom-12 left-[200px] bg-[#2E374B] border-solid border-[1px] border-white w-[173px] h-[123px] rounded-[20px] z-500"
+    >
+      <img
+        onClick={closeDialog}
+        src={closeIcon}
+        alt="CLOSE"
+        className="w-[32px] h=[32px] ml-[8rem]"
+      />
+      <div className="flex items-center justify-center flex-col">
+      <button className="border-solid border-[1px] border-white text-white rounded-[12px] w-[92px] h-[32px] mb-2">
+        Edit
+      </button>
+
+      <button className="border-solid border-[1px] border-[#FF0000] text-[#FF0000] rounded-[12px] w-[92px] h-[32px]">
+        Delete
+      </button>
+      </div>
+    </div>
+  );
+};
+
 const ImageDetailsDialog = ({ imageSrc, closeDialog }) => {
+  const [isOpenEditDelDialog, setIsOpenEditDelDialog] = useState(false);
+  const [dialogPosition, setDialogPosition] = useState({ top: 0, left: 0 });
+
+  const openEditDelDialog = (event) => {
+    const rect = event.target.getBoundingClientRect(); // Get the position of the three dots button
+    setDialogPosition({
+      top: rect.bottom + window.scrollY, // Positioning just below the button
+      left: rect.left + window.scrollX, // Align horizontally with the button
+    });
+    setIsOpenEditDelDialog(true);
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-[#2E374B] w-[530px] h-[370px] rounded-[10px] p-4 relative">
+      <div className="bg-[#2E374B] w-[530px] md:h-[370px] h-[410px] rounded-[10px] p-4 relative">
         <button
           onClick={closeDialog}
           className="absolute top-2 right-2 text-white"
@@ -35,15 +71,21 @@ const ImageDetailsDialog = ({ imageSrc, closeDialog }) => {
           <div className="bg-white opacity-[50%] w-[2px] h-6"></div>
 
           <div className="flex items-center gap-4">
-            <img src={chatIcon} alt="LIKES" className="w-[22px] h-[22px]" />
+            <img src={chatIcon} alt="COMMENTS" className="w-[22px] h-[22px]" />
             <span className="text-white opacity-[50%] font-[500] text-[14px] leading-[7px]">
               200+ Comments
             </span>
           </div>
 
-          <button>
+          <button onClick={openEditDelDialog}>
             <img src={threeDots} alt="MENU" className="w-[18px] h-[20px]" />
           </button>
+          {isOpenEditDelDialog && (
+            <EditDeleteDialog
+              closeDialog={closeDialog}
+              position={dialogPosition}
+            />
+          )}
         </div>
       </div>
     </div>
