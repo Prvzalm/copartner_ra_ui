@@ -11,7 +11,7 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [duration, setDuration] = useState("");
-  const [subscriptionType, setSubscriptionType] = useState(null);
+  // const [subscriptionType, setSubscriptionType] = useState(null);
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [filteredPlans, setFilteredPlans] = useState(plans);
   const [offerDuration, setOfferDuration] = useState("");
@@ -24,17 +24,17 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
     }
   }, [startDate, endDate]);
 
-  useEffect(() => {
-    if (subscriptionType !== null) {
-      const filteredPlans = plans.filter(
-        (plan) =>
-          mapSubscriptionTypeToInt(plan.subscriptionType) === subscriptionType
-      );
-      setFilteredPlans(filteredPlans);
-    } else {
-      setFilteredPlans(plans);
-    }
-  }, [subscriptionType, plans]);
+  // useEffect(() => {
+  //   if (subscriptionType !== null) {
+  //     const filteredPlans = plans.filter(
+  //       (plan) =>
+  //         mapSubscriptionTypeToInt(plan.subscriptionType) === subscriptionType
+  //     );
+  //     setFilteredPlans(filteredPlans);
+  //   } else {
+  //     setFilteredPlans(plans);
+  //   }
+  // }, [subscriptionType, plans]);
 
   const calculateOfferDuration = (start, end) => {
     const startDate = new Date(start);
@@ -48,10 +48,10 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
     console.log("Plan Amount:", planAmt);
     console.log("Start Date:", startDate);
     console.log("End Date:", endDate);
-    console.log("Subscription Type:", subscriptionType);
+    // console.log("Subscription Type:", subscriptionType);
     console.log("Duration:", duration);
 
-    if (!planName || !planAmt || !startDate || !endDate || !subscriptionType || !duration) {
+    if (!planName || !planAmt || !startDate || !endDate || !duration) {
       toast.error("Please fill all fields", {
         position: "top-right",
       });
@@ -65,7 +65,7 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
       discountValidFrom: new Date(startDate).toISOString(),
       discountValidTo: new Date(endDate).toISOString(),
       createdOn: new Date().toISOString(),
-      serviceType: subscriptionType,
+      // serviceType: subscriptionType,
     };
 
     try {
@@ -73,7 +73,7 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
         "https://copartners.in:5137/api/ChatConfiguration",
         {
           expertsId: stackholderId,
-          subscriptionType,
+          // subscriptionType,
           planType: "F",
           planName,
           duration,
@@ -126,10 +126,10 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
     setIsSubscriptionOpen(!isSubscriptionOpen);
   };
 
-  const handleSubClick = (option) => {
-    setSubscriptionType(option);
-    setIsSubscriptionOpen(false);
-  };
+  // const handleSubClick = (option) => {
+  //   setSubscriptionType(option);
+  //   setIsSubscriptionOpen(false);
+  // };
 
   return (
     <div className="flex flex-col gap-4 md:w-[1006px]">
