@@ -35,7 +35,7 @@ const SubscriptionChatDialog = ({ closeDialog, axiosServiceData }) => {
 
     try {
       const response = await axios.post(
-        'https://copartners.in:5137/api/ChatConfiguration',
+        'https://copartners.in/Featuresservice/api/ChatConfiguration',
         data
       );
       if (response.status === 200) {

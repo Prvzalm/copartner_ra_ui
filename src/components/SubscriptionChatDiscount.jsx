@@ -15,7 +15,7 @@ const SubscriptionChatDiscount = () => {
   const fetchCourses = async () => {
     try {
       const response = await axios.get(
-        `https://copartners.in:5137/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
+        `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
       );
       if (response.data && Array.isArray(response.data.data)) {
         setCourses(response.data.data);
@@ -43,8 +43,8 @@ const SubscriptionChatDiscount = () => {
   };
 
   const handleDelete = async (id, planType) => {
-    const DELETE_URL = `https://copartners.in:5137/api/ChatConfiguration/${id}`;
-    const PATCH_URL = `https://copartners.in:5137/api/ChatConfiguration?Id=${id}`;
+    const DELETE_URL = `https://copartners.in/Featuresservice/api/ChatConfiguration/${id}`;
+    const PATCH_URL = `https://copartners.in/Featuresservice/api/ChatConfiguration?Id=${id}`;
     const patchData = [
       {
         path: "discountValidFrom",
