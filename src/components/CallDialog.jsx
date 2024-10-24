@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { closeIcon, dropdown } from "../assets";
+import axios from "axios";
+import { toast } from "react-toastify";
+import api from "../api";
 
-const CallDialog = ({ isFreeCallsDialogOpen, closeDialog }) => {
+const CallDialog = ({ isFreeCallsDialogOpen, closeDialog, stackholderId }) => {
   const [name, setName] = useState("");
   const [above, setAbove] = useState("");
-  const [target, setTarget] = useState("");
+  const [targets, setTargets] = useState(["", "", "", ""]);
   const [SL, setSL] = useState("");
   const [subscriptionType, setSubscriptionType] = useState(null);
   const [methodType, setMethodType] = useState(null);
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isMethodOpen, setIsMethodOpen] = useState(false);
+  const [blurTargets, setBlurTargets] = useState(false);
 
   const inputClassName =
     subscriptionType || methodType === null ? "text-[#9BA3AF]" : "text-white";
@@ -56,6 +60,78 @@ const CallDialog = ({ isFreeCallsDialogOpen, closeDialog }) => {
   const handleMethodClick = (option) => {
     setMethodType(option);
     setIsMethodOpen(false);
+  };
+
+  const handleTargetChange = (index, value) => {
+    const newTargets = [...targets];
+    newTargets[index] = value;
+    setTargets(newTargets);
+  };
+
+  const handleBlurChange = (e) => {
+    setBlurTargets(e.target.checked);
+  };
+
+  const getCallType = () => {
+    switch (subscriptionType) {
+      case 1:
+        return "Commodity";
+      case 2:
+        return "Equity";
+      case 3:
+        return "Options";
+      default:
+        return "Unknown";
+    }
+  };
+
+  // Function to map methodType to action
+  const getActionType = () => {
+    switch (methodType) {
+      case 1:
+        return "BUY";
+      case 2:
+        return "SELL";
+      case 3:
+        return "HOLD";
+      default:
+        return "Unknown";
+    }
+  };
+
+  const handleSubmit = async () => {
+    const callData = {
+      expertsId: stackholderId,
+      callMode: "F", // "F" for free, "P" for premium
+      callType: getCallType(),
+      action: getActionType(),
+      name,
+      above: parseFloat(above),
+      target1: parseFloat(targets[0]) || 0,
+      target2: parseFloat(targets[1]) || 0,
+      target3: parseFloat(targets[2]) || 0,
+      target4: parseFloat(targets[3]) || 0,
+      stopLoss: parseFloat(SL) || 0,
+      blur: blurTargets
+    };
+
+    try {
+      const response = await api.post(
+        "/CallPost",
+        callData,
+        {
+          headers: {
+            "Content-Type": "application/json-patch+json",
+          },
+        }
+      );
+      toast.success(response.data.displayMessage);
+      closeDialog();
+      // Handle success case, close dialog, or show a success message
+    } catch (error) {
+      console.error("Error submitting call data", error);
+      // Handle error case, show error message
+    }
   };
 
   return (
@@ -215,31 +291,40 @@ const CallDialog = ({ isFreeCallsDialogOpen, closeDialog }) => {
                 />
               </div>
             </div>
-            
+
             {/* Target and SL */}
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px] mt-4">
-              {/* Name Input */}
-              <div className="relative">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[70px] w-[58px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  Target
-                </label>
-                <input
-                  type="text"
-                  value={target}
-                  onChange={(e) => setTarget(e.target.value)}
-                  id="name-input"
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
+              {/* Target Inputs 1, 2, 3, 4 */}
+              <div className="relative w-full">
+                <div className="grid grid-cols-4 gap-4 mt-2">
+                  {["Target 1", "Target 2", "Target 3", "Target 4"].map(
+                    (targetLabel, index) => (
+                      <div key={index} className="relative">
+                        <label
+                          className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+            w-full md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                        >
+                          {targetLabel}
+                        </label>
+                        <input
+                          type="number"
+                          value={targets[index] || ""}
+                          onChange={(e) =>
+                            handleTargetChange(index, e.target.value)
+                          }
+                          className="w-full px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
 
-              {/* Above Input */}
+              {/* SL Input */}
               <div className="relative">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    md:w-[30px] w-[34px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+      md:w-[70px] w-[58px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   SL
                 </label>
@@ -247,17 +332,30 @@ const CallDialog = ({ isFreeCallsDialogOpen, closeDialog }) => {
                   type="number"
                   value={SL}
                   onChange={(e) => setSL(e.target.value)}
-                  id="above-input"
                   className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
+            </div>
+            <div className="flex items-center gap-2 text-white">
+              <input
+                type="checkbox"
+                name="BlurTarget"
+                id="blurTarget"
+                onChange={handleBlurChange}
+              />
+              <label htmlFor="blurTarget">Blur Last 2 Target</label>
             </div>
           </div>
 
           {/* Send Button */}
           <div className="flex justify-center mt-8">
-            <button className="bg-white opacity-[90%] md:w-[107px] w-[90px] h-[36px] md:h-[40px] rounded-[10px]">
-              <span className="font-[500] md:text-[16px] text-[15px]">SEND</span>
+            <button
+              onClick={handleSubmit}
+              className="bg-white opacity-[90%] md:w-[107px] w-[90px] h-[36px] md:h-[40px] rounded-[10px]"
+            >
+              <span className="font-[500] md:text-[16px] text-[15px]">
+                SEND
+              </span>
             </button>
           </div>
         </div>

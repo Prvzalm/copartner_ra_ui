@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import api from "../api";
 
-const TelegramChannel = () => {
+const TelegramChannel = ({stackholderId}) => {
   const [channelData, setChannelData] = useState([]);
-  const stackholderId = sessionStorage.getItem("stackholderId");
   const TELEGRAM_CHAT_API = `https://copartners.in:5134/api/TelegramMessage/${stackholderId}?userType=RA&page=1&pageSize=100000`;
 
   useEffect(() => {
@@ -34,8 +34,8 @@ const TelegramChannel = () => {
       { path: "channelName", op: "replace", value: channelName },
     ];
 
-    axios
-      .patch(`https://copartners.in:5134/api/TelegramMessage?Id=${id}`, payload)
+    api
+      .patch(`/TelegramMessage?Id=${id}`, payload)
       .then((response) => {
         toast.success("Successfully Send!", {
           position: "top-right",

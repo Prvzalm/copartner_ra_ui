@@ -1,123 +1,86 @@
-import React, { useState } from "react";
-import { chatIcon, closeIcon, heart, threeDots } from "../assets";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import FollowerFeedDialog from "./FollowerFeedDialog";
 import FeedUploadPostDialog from "./FeedUploadPostDialog";
+import ImageDetailsDialog from "./ImageDetailsDialog";
 
-const EditDeleteDialog = ({ closeDialog, position }) => {
-  return (
-    <div
-      className="absolute md:bottom-[50px] md:left-[350px] bottom-12 left-[200px] bg-[#2E374B] border-solid border-[1px] border-white w-[173px] h-[123px] rounded-[20px] z-500"
-    >
-      <img
-        onClick={closeDialog}
-        src={closeIcon}
-        alt="CLOSE"
-        className="w-[32px] h=[32px] ml-[8rem]"
-      />
-      <div className="flex items-center justify-center flex-col">
-      <button className="border-solid border-[1px] border-white text-white rounded-[12px] w-[92px] h-[32px] mb-2">
-        Edit
-      </button>
-
-      <button className="border-solid border-[1px] border-[#FF0000] text-[#FF0000] rounded-[12px] w-[92px] h-[32px]">
-        Delete
-      </button>
-      </div>
-    </div>
-  );
-};
-
-const ImageDetailsDialog = ({ imageSrc, closeDialog }) => {
-  const [isOpenEditDelDialog, setIsOpenEditDelDialog] = useState(false);
-  const [dialogPosition, setDialogPosition] = useState({ top: 0, left: 0 });
-
-  const openEditDelDialog = (event) => {
-    const rect = event.target.getBoundingClientRect(); // Get the position of the three dots button
-    setDialogPosition({
-      top: rect.bottom + window.scrollY, // Positioning just below the button
-      left: rect.left + window.scrollX, // Align horizontally with the button
-    });
-    setIsOpenEditDelDialog(true);
-  };
-
-  return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-[#2E374B] w-[530px] md:h-[370px] h-[410px] rounded-[10px] p-4 relative">
-        <button
-          onClick={closeDialog}
-          className="absolute top-2 right-2 text-white"
-        >
-          <img src={closeIcon} alt="CLOSE" className="w-[30px] h-[30px]" />
-        </button>
-        <img
-          src={imageSrc}
-          alt="Uploaded"
-          className="w-full h-[200px] object-cover rounded-lg"
-        />
-        <p className="text-white opacity-[50%] text-start mt-4">
-          Lorem ipsum dolor sit amet consectetur. At urna blandit dolor purus
-          hendrerit est mi laoreet quisque. In sed diam dui orci feugiat. Nunc
-          fames sed libero vitae nunc. In diam maecenas sapien orci nibh sed.
-        </p>
-
-        <div className="flex flex-row justify-between mt-4">
-          <div className="flex items-center gap-4">
-            <img src={heart} alt="LIKES" className="w-[22px] h-[22px]" />
-            <span className="text-white opacity-[50%] font-[500] text-[14px] leading-[7px]">
-              230+ Liked
-            </span>
-          </div>
-
-          <div className="bg-white opacity-[50%] w-[2px] h-6"></div>
-
-          <div className="flex items-center gap-4">
-            <img src={chatIcon} alt="COMMENTS" className="w-[22px] h-[22px]" />
-            <span className="text-white opacity-[50%] font-[500] text-[14px] leading-[7px]">
-              200+ Comments
-            </span>
-          </div>
-
-          <button onClick={openEditDelDialog}>
-            <img src={threeDots} alt="MENU" className="w-[18px] h-[20px]" />
-          </button>
-          {isOpenEditDelDialog && (
-            <EditDeleteDialog
-              closeDialog={closeDialog}
-              position={dialogPosition}
-            />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const FeedPost = () => {
+const FeedPost = ({ stackholderId }) => {
   const [isFollowerDialog, setIsFollowerDialog] = useState(false);
   const [isUploadPostDialog, setIsUploadPostDialog] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState([]); // To store multiple uploaded images
-  const [selectedImage, setSelectedImage] = useState(null); // Store the selected image
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [showSubscriptionType, setShowSubscriptionType] = useState("1");
+  const [postType, setPostType] = useState("Commodity");
+  const [editPostData, setEditPostData] = useState(null);
+
+  const fetchFeedData = async () => {
+    try {
+      const response = await axios.get(
+        `https://copartners.in:5132/api/Feed/GetByExpertsId?expertsId=${stackholderId}&postType=${postType}&page=1&pageSize=10000`
+      );
+      if (response.data.isSuccess) {
+        const fetchedImages = response.data.data.flatMap((expert) =>
+          expert.shareList.map((share) => ({
+            id: share.id, // Include the post ID
+            mediaPath: share.mediaPath,
+            caption: share.caption,
+            link: share.link,
+            buttonName: share.buttonName,
+            buttonRoute: share.buttonRoute,
+            postType: share.postType,
+          }))
+        );
+        setUploadedImages(fetchedImages);
+      } else {
+        console.error("Failed to fetch feed data.");
+      }
+    } catch (error) {
+      console.error("Error fetching feed data:", error);
+    }
+  };
+
+  // Fetch feed data when component mounts or postType changes
+  useEffect(() => {
+    fetchFeedData();
+  }, [stackholderId, postType]);
 
   const openFollwerDialog = () => {
     setIsFollowerDialog(true);
   };
 
-  const openUploadPostDialog = () => {
+  const openUploadPostDialog = (postId = null) => {
+    if (postId) {
+      const postToEdit = uploadedImages.find((post) => post.id === postId);
+      if (postToEdit) {
+        setEditPostData(postToEdit);
+      }
+    } else {
+      setEditPostData(null);
+    }
     setIsUploadPostDialog(true);
   };
 
   const closeDialog = () => {
     setIsFollowerDialog(false);
     setIsUploadPostDialog(false);
-    setSelectedImage(null); // Close image details dialog as well
+    setSelectedImage(null);
   };
 
   const handleImageUpload = (imageURL) => {
-    setUploadedImages((prevImages) => [...prevImages, imageURL]); // Add the new image to the existing images array
+    setUploadedImages((prevImages) => [...prevImages, imageURL]);
   };
 
-  const handleShowImageDetails = (image) => {
-    setSelectedImage(image); // Set the selected image and open dialog
+  const handleShowImageDetails = (post) => {
+    setSelectedImage(post);
+  };
+
+  const handleSubscriptionChange = (type, postTypeLabel) => {
+    setShowSubscriptionType(type);
+    setPostType(postTypeLabel);
+  };
+
+  const refreshFeed = () => {
+    fetchFeedData();
   };
 
   return (
@@ -149,7 +112,7 @@ const FeedPost = () => {
           Feed Post
         </span>
         <button
-          onClick={openUploadPostDialog}
+          onClick={() => openUploadPostDialog()}
           className="md:w-[100px] w-[70px] md:h-[40px] h-[30px] rounded-[10px] text-white font-[600] font-inter md:text-[12px] text-[14px] border-solid border-[1px] border-white md:mr-4 mr-2"
         >
           +Add
@@ -159,28 +122,71 @@ const FeedPost = () => {
             isUploadPostDialog={isUploadPostDialog}
             closeDialog={closeDialog}
             handleImageUpload={handleImageUpload}
+            stackholderId={stackholderId}
+            postData={editPostData}
+            mode={editPostData ? "edit" : "add"}
+            refreshFeed={refreshFeed}
           />
         )}
       </div>
 
-      {/* Render the uploaded images below the Feed Post */}
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:w-[1084px]">
-        {uploadedImages.map((image, index) => (
-          <button key={index} onClick={() => handleShowImageDetails(image)}>
+      <div className="flex md:flex-row flex-col md:items-center md:gap-[39rem] gap-2">
+        <div className="flex flex-row md:gap-4 gap-8">
+          <button
+            onClick={() => handleSubscriptionChange("1", "Commodity")}
+            className={`md:w-[120px] w-[100px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+              showSubscriptionType === "1"
+                ? "bg-[#ffffff] font-[600] font-inter md:text-[12px] text-[12px]"
+                : "bg-transparent text-white font-[600] font-inter md:text-[12px] text-[12px]"
+            }`}
+          >
+            Commodity
+          </button>
+          <button
+            onClick={() => handleSubscriptionChange("2", "Equity")}
+            className={`md:w-[90px] w-[70px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+              showSubscriptionType === "2"
+                ? "bg-[#ffffff] font-[600] font-inter md:text-[12px] text-[12px]"
+                : "bg-transparent text-white font-[600] font-inter md:text-[12px] text-[12px]"
+            }`}
+          >
+            Equity
+          </button>
+          <button
+            onClick={() => handleSubscriptionChange("3", "Options")}
+            className={`md:w-[140px] w-[120px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+              showSubscriptionType === "3"
+                ? "bg-[#ffffff] font-[600] font-inter md:text-[12px] text-[12px]"
+                : "bg-transparent text-white font-[600] font-inter md:text-[12px] text-[12px]"
+            }`}
+          >
+            Futures & Options
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:w-[1084px]">
+        {uploadedImages.map((share, index) => (
+          <button key={index} onClick={() => handleShowImageDetails(share)}>
             <img
-              src={image}
+              src={share.mediaPath}
               alt={`Uploaded ${index}`}
-              className="w-[340px] h-[244px] object-cover rounded-lg"
+              className="w-full h-[244px] object-cover rounded-lg"
             />
           </button>
         ))}
       </div>
 
-      {/* Show the Image Details Dialog if an image is clicked */}
       {selectedImage && (
         <ImageDetailsDialog
-          imageSrc={selectedImage}
+          imageSrc={selectedImage.mediaPath}
+          caption={selectedImage.caption}
           closeDialog={closeDialog}
+          id={selectedImage.id}
+          postData={selectedImage}
+          openUploadPostDialog={openUploadPostDialog}
+          refreshFeed={refreshFeed}
+          stackholderId={stackholderId}
         />
       )}
     </div>

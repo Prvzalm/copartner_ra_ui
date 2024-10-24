@@ -10,7 +10,7 @@ import Pagination from "./Pagination";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 
-const Wallet = () => {
+const Wallet = ({stackholderId}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showTransactions, setShowTransactions] = useState("transaction");
   const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
@@ -29,8 +29,6 @@ const Wallet = () => {
   const [hoveredRow, setHoveredRow] = useState(null);
   const [copiedRow, setCopiedRow] = useState(null);
   const pageSize = 15;
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const WALLET_BALANCE_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
 

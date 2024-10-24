@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { tick, clipboard } from "../assets";
 
-const ReferralLinkComponent = () => {
+const ReferralLinkComponent = ({stackholderId}) => {
   const [referralLink, setReferralLink] = useState("");
   const [paymentLink, setPaymentLink] = useState("")
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
@@ -9,8 +9,6 @@ const ReferralLinkComponent = () => {
   const [loading, setLoading] = useState(false);
   const referralLinkRef = useRef(null);
   const paymentLinkRef = useRef(null);
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const generateReferralLink = async () => {
     setLoading(true);

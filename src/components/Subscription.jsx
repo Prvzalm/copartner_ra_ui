@@ -4,8 +4,9 @@ import { deleteIcon, edit } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 import SubsciptionMiniOffer from "./SubsciptionMiniOffer";
+import api from "../api";
 
-const Subscription = () => {
+const Subscription = ({stackholderId}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
@@ -14,8 +15,6 @@ const Subscription = () => {
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const [planTypeCounts, setPlanTypeCounts] = useState({});
   const [showSubscriptionType, setShowSubscriptionType] = useState("1"); // Default to Commodity
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
   const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
@@ -81,11 +80,11 @@ const Subscription = () => {
   };
 
   const handleDeleteTable = async (id) => {
-    const DELETE_TABLE = `https://copartners.in:5009/api/Subscription/${id}`;
+    const DELETE_TABLE = `/Subscription/${id}`;
 
     try {
       handleSuccess();
-      const response = await axios.delete(DELETE_TABLE);
+      const response = await api.delete(DELETE_TABLE);
       if (response.status === 200) {
         console.log("Subscription deleted successfully");
         setSubTable(subTable.filter((subscription) => subscription.id !== id));

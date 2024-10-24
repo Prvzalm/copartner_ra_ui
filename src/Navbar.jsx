@@ -72,7 +72,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
 
   return (
     <div
-      className={`fixed flex w-full justify-center items-center py-[1rem] z-[99] ${
+      className={`fixed flex w-full justify-center items-center py-[1rem] ${
         isScrolled ? styles.transparentNavbar : styles.scrolledNavbar
       }`}
     >

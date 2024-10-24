@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import StandardQuesDialog from "./StandardQuesDialog";
 import axios from "axios";
 import { toast } from "react-toastify";
+import api from "../api";
 
-const StandardQues = () => {
+const StandardQues = ({stackholderId}) => {
   const [standardQuesData, setStandardQuesData] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editData, setEditData] = useState({ question: "", answer: "" });
   const [loading, setLoading] = useState(true); // Initialize loading as true
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const handleSuccessEdited = () => {
     toast.success("Successfully Edited!", {
@@ -62,8 +61,8 @@ const StandardQues = () => {
     if (editingIndex === index) {
       try {
         const questionToEdit = standardQuesData[editingIndex];
-        const response = await axios.patch(
-          `https://copartners.in:5132/api/StandardQuestions?Id=${questionToEdit.id}`,
+        const response = await api.patch(
+          `/StandardQuestions?Id=${questionToEdit.id}`,
           [
             { path: "/question", op: "replace", value: editData.question },
             { path: "/answer", op: "replace", value: editData.answer }
@@ -91,7 +90,7 @@ const StandardQues = () => {
   const handleDeleteQuestion = async (index) => {
     const questionToDelete = standardQuesData[index];
     try {
-      await axios.delete(`https://copartners.in:5132/api/StandardQuestions/${questionToDelete.id}`);
+      await api.delete(`/StandardQuestions/${questionToDelete.id}`);
       const updatedData = standardQuesData.filter((_, i) => i !== index);
       setStandardQuesData(updatedData);
       handleSuccessDel();

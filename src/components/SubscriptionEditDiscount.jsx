@@ -4,6 +4,7 @@ import { closeIcon, dropdown } from "../assets";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import api from "../api";
 
 const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
   const [planName, setPlanName] = useState("");
@@ -101,8 +102,8 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
     ];
 
     try {
-      const response = await axios.patch(
-        `https://copartners.in:5009/api/Subscription?Id=${subID}`,
+      const response = await api.patch(
+        `/Subscription?Id=${subID}`,
         patchData,
         {
           headers: {

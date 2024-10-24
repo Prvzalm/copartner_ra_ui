@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { closeIcon } from "../assets";
 import { toast } from "react-toastify";
+import api from "../api";
 
 const StandardQuesDialog = ({ closeDialog, handleAddQuestion }) => {
   const [addQues, setAddQues] = useState('');
@@ -21,7 +22,7 @@ const StandardQuesDialog = ({ closeDialog, handleAddQuestion }) => {
     if (addQues && addAns) {
       setLoading(true);
       try {
-        const response = await axios.post('https://copartners.in:5132/api/StandardQuestions', {
+        const response = await api.post('/StandardQuestions', {
           expertId: stackholderId,
           chatId: 'string', 
           question: addQues,

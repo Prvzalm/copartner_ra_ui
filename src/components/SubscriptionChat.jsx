@@ -3,6 +3,7 @@ import axios from "axios";
 import { deleteIcon } from "../assets";
 import SubscriptionChatDialog from './SubscriptionChatDialog';
 import SubscriptionChatDiscount from "./SubscriptionChatDiscount";
+import api from "../api";
 
 const SubscriptionChat = () => {
   const [smallScreen, setSmallScreen] = useState(false);
@@ -43,9 +44,9 @@ const SubscriptionChat = () => {
   };
 
   const handleDelete = async (id) => {
-    const DELETE_API = `https://copartners.in:5137/api/ChatConfiguration/${id}`;
+    const DELETE_API = `/ChatConfiguration/${id}`;
     try {
-      await axios.delete(DELETE_API);
+      await api.delete(DELETE_API);
       setChat(prevChat => prevChat.filter(course => course.id !== id));
     } catch (error) {
       console.error("Error deleting the chat:", error);

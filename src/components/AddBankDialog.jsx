@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { closeIcon } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
+import api from "../api";
 
 const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
   const [accountNumber, setAccountNumber] = useState("");
@@ -53,8 +54,8 @@ const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
     };
 
     try {
-      const response = await axios.post(
-        "https://copartners.in:5135/api/Withdrawal/PostBankUPIDetails",
+      const response = await api.post(
+        "/Withdrawal/PostBankUPIDetails",
         postData
       );
 

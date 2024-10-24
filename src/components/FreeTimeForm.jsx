@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { dropdown } from "../assets";
 import axios from "axios";
+import api from "../api";
 
 const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
   const [planName, setPlanName] = useState("");
@@ -69,8 +70,8 @@ const FreeTimeForm = ({ plans, closeDialog, addCourse }) => {
     };
 
     try {
-      const response = await axios.post(
-        "https://copartners.in:5137/api/ChatConfiguration",
+      const response = await api.post(
+        "/ChatConfiguration",
         {
           expertsId: stackholderId,
           subscriptionType,

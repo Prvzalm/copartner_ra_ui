@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { closeIcon, signup } from "../assets";
+import api from "../api";
 
 const NewPassword = () => {
   const location = useLocation();
@@ -37,8 +38,8 @@ const NewPassword = () => {
     };
 
     try {
-      const response = await axios.post(
-        "https://copartners.in:5130/api/Users/ForgotPassword",
+      const response = await api.post(
+        "/Users/ForgotPassword",
         postData
       );
 

@@ -13,7 +13,7 @@ import ChatBubble from "./ChatBubble";
 import { Link } from "react-router-dom";
 import * as signalR from "@microsoft/signalr";
 
-const ChatsHistory = () => {
+const ChatsHistory = ({stackholderId}) => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [activeUser, setActiveUser] = useState(null);
   const [messageInput, setMessageInput] = useState("");
@@ -41,8 +41,6 @@ const ChatsHistory = () => {
   const connectionRef = useRef({});
   const intervalRefs = useRef({});
   const messagesEndRef = useRef(null);
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -123,9 +121,9 @@ const ChatsHistory = () => {
             : getPlanDuration(filteredUsers[index].planId);
   
         return {
-          chatUserImg: userDetails.userImagePath || chatUser1,
-          chatUserName: userDetails.name,
-          mobileNumber: userDetails.mobileNumber,
+          chatUserImg: userDetails?.userImagePath || chatUser1,
+          chatUserName: userDetails?.name,
+          mobileNumber: userDetails?.mobileNumber,
           timestamp: filteredUsers[index].timestamp,
           planTypeLabel: planTypeLabel,
           duration: duration,
@@ -141,7 +139,7 @@ const ChatsHistory = () => {
     } catch (error) {
       console.error("Error fetching chat users:", error);
     }
-  };  
+  };
 
   useEffect(() => {
     if (chatPlan) {

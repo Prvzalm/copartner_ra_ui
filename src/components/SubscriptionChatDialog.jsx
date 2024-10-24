@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { closeIcon, dropdown } from "../assets";
 import { toast } from "react-toastify";
 import axios from "axios";
+import api from "../api";
 
 const SubscriptionChatDialog = ({ closeDialog, axiosServiceData }) => {
   const [planName, setPlanName] = useState("");
@@ -34,8 +35,8 @@ const SubscriptionChatDialog = ({ closeDialog, axiosServiceData }) => {
     };
 
     try {
-      const response = await axios.post(
-        'https://copartners.in:5137/api/ChatConfiguration',
+      const response = await api.post(
+        '/ChatConfiguration',
         data
       );
       if (response.status === 200) {

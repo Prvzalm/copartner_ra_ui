@@ -71,6 +71,7 @@ import standardQuesInactive from './standardQuesInactive.png';
 import exit from './exit.png';
 import heart from './heart.png';
 import chatImg from './chatImg.png';
+import commentIcon from './commentIcon.png';
 
 export {
     availableIcon,
@@ -131,4 +132,5 @@ export {
     attachDoc, sendChat, audio,
     chatUser3, exit,
     heart, chatImg,
+    commentIcon
 }

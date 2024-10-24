@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ChatsHistory from "./ChatsHistory";
+import api from "../api";
 
-const Chats = () => {
+const Chats = ({stackholderId}) => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [isChat, setIsChat] = useState(false);
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const expertAPI = `https://copartners.in:5132/api/Experts/${stackholderId}`;
 
@@ -37,14 +36,12 @@ const Chats = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const isChatLiveApi = `https://copartners.in:5132/api/Experts?Id=${stackholderId}`;
-
   const handleCheckboxChange = async () => {
     const newValue = !isChat; 
     setIsChat(newValue); 
 
     try {
-      await axios.patch(isChatLiveApi, [
+      await api.patch(`/Experts?Id=${stackholderId}`, [
         {
           path: "isChatLive",
           op: "replace",
@@ -102,7 +99,7 @@ const Chats = () => {
       </div> */}
     </div>
 
-    <ChatsHistory />
+    <ChatsHistory stackholderId={stackholderId} />
     </>
   );
 };

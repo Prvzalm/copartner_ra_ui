@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import styles from "./style";
 import Navbar from "./Navbar";
@@ -17,6 +17,11 @@ import TelegramChannel from "./components/TelegramChannel";
 import StandardQues from "./components/StandardQues";
 import CallPost from "./components/CallPost";
 import FeedPost from "./components/FeedPost";
+import { useAuth } from "./authContext";
+import ProtectedRoute from "./ProtectedRoute";
+import api from "./api";
+import SignalRCallMessage from "./components/SignalRCallMessage";
+import SignalRCallMessage2 from "./components/SignalRCallMessage2";
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
@@ -29,6 +34,9 @@ function App() {
   const isResetPage = location.pathname === "/reset";
   const isNewPasswordPage = location.pathname === "/forget";
   const isConfirmPasswordPage = location.pathname === "/set-new-password";
+  const { authState } = useAuth();
+  const stackholderId = authState.stackholderId;
+  const token = authState.token;
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -50,17 +58,19 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const stackholderId = sessionStorage.getItem("stackholderId");
-    const TELEGRAM_CHAT_API = `https://copartners.in:5134/api/TelegramMessage/${stackholderId}?userType=RA&page=1&pageSize=100000`;
+    if (authState.isAuthenticated) {
+      const stackholderId = authState.stackholderId;
+      const TELEGRAM_CHAT_API = `/TelegramMessage/${stackholderId}?userType=RA&page=1&pageSize=100000`;
 
-    axios.get(TELEGRAM_CHAT_API)
-      .then(response => {
-        setTelegramData(response.data.data);
-      })
-      .catch(error => {
-        console.error("Error fetching the data", error);
-      });
-  }, []);
+      api.get(TELEGRAM_CHAT_API)
+        .then(response => {
+          setTelegramData(response.data.data);
+        })
+        .catch(error => {
+          console.error("Error fetching the data", error);
+        });
+    }
+  }, [authState]);
 
   return (
     <div className={`bg-gradient overflow-hidden`}>
@@ -79,35 +89,60 @@ function App() {
               />
             )}
             <Routes>
-              <Route
-                path="/"
-                element={
-                  signUp ? <Dashboard /> : <Navigate to="/signup" replace={true} />
-                }
-              />
-              <Route path="/analysis_board" element={<AnalysisBoard />} />
-              <Route path="/call_post" element={<CallPost />} />
-              <Route path="/feed_post" element={<FeedPost />} />
-              {/* <Route path="/webinar" element={<Webinar />} /> */}
-              <Route path="/subscription" element={<Subscription />} />
-              <Route path="/wallet" element={<Wallet />} />
-              <Route path="/chats" element={<Chats />} />
-              {/* <Route path="/chats/chats_history" element={<ChatsHistory />} /> */}
-              <Route path="/subscription" element={<Subscription />} />
-              <Route path="/wallet" element={<Wallet />} />
-              {telegramData.length > 0 && <Route path="/telegram_channel" element={<TelegramChannel />} />}
-              <Route path="/standard_questions" element={<StandardQues />} />
-              <Route path="/setting" element={<Setting />} />
-            </Routes>
-            <Routes>
-              <Route
-                path="/signup"
-                element={<SignUp setIsSignedUp={() => sessionStorage.setItem('visitedSignUp', 'true')} />}
-              />
-              <Route path="/reset" element={<ForgetPassword />} />
-              <Route path="/forget" element={<NewPassword />} />
-              <Route path="/set-new-password" element={<ConfirmPassword />} />
-            </Routes>
+  <Route
+    path="/"
+    element={<ProtectedRoute element={<Dashboard token={token} stackholderId={stackholderId} />} />}
+  />
+  <Route
+    path="/analysis_board"
+    element={<ProtectedRoute element={<AnalysisBoard token={token} stackholderId={stackholderId} />} />}
+  />
+  <Route
+    path="/call_post"
+    element={<ProtectedRoute element={<CallPost token={token} stackholderId={stackholderId} />} />}
+  />
+  <Route
+    path="/feed_post"
+    element={<ProtectedRoute element={<FeedPost token={token} stackholderId={stackholderId} />} />}
+  />
+  <Route
+    path="/subscription"
+    element={<ProtectedRoute element={<Subscription token={token} stackholderId={stackholderId} />} />}
+  />
+  <Route
+    path="/wallet"
+    element={<ProtectedRoute element={<Wallet token={token} stackholderId={stackholderId} />} />}
+  />
+  <Route
+    path="/chats"
+    element={<ProtectedRoute element={<Chats token={token} stackholderId={stackholderId} />} />}
+  />
+  {/* {telegramData.length > 0 && (
+    <Route
+      path="/telegram_channel"
+      element={<ProtectedRoute element={<TelegramChannel token={token} stackholderId={stackholderId} />} />}
+    />
+  )} */}
+  <Route
+    path="/standard_questions"
+    element={<ProtectedRoute element={<StandardQues token={token} stackholderId={stackholderId} />} />}
+  />
+  <Route
+    path="/setting"
+    element={<ProtectedRoute element={<Setting token={token} stackholderId={stackholderId} />} />}
+  />
+
+  {/* Public Routes */}
+  <Route
+    path="/signup"
+    element={<SignUp setIsSignedUp={() => sessionStorage.setItem('visitedSignUp', 'true')} />}
+  />
+  <Route path="/chat" element={<SignalRCallMessage token={token} stackholderId={stackholderId} />} />
+  <Route path="/chatPremium" element={<SignalRCallMessage2 token={token} stackholderId={stackholderId} />} />
+  <Route path="/reset" element={<ForgetPassword token={token} stackholderId={stackholderId} />} />
+  <Route path="/forget" element={<NewPassword token={token} stackholderId={stackholderId} />} />
+  <Route path="/set-new-password" element={<ConfirmPassword token={token} stackholderId={stackholderId} />} />
+</Routes>
           </>
         </div>
       </div>

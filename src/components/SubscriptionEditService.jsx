@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { dropdown, closeIcon } from "../assets";
+import api from "../api";
 
 const SubscriptionEditService = ({ closeDialog, subscription, subTable, axiosServiceData }) => {
   const getSubscriptionTypeLabel = (type) => {
@@ -90,7 +91,7 @@ const SubscriptionEditService = ({ closeDialog, subscription, subTable, axiosSer
     ];
 
     try {
-      const response = await axios.patch(`https://copartners.in:5009/api/Subscription?Id=${subTable.id}`, patchData, {
+      const response = await api.patch(`/Subscription?Id=${subTable.id}`, patchData, {
         headers: {
           'Content-Type': 'application/json-patch+json'
         }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { closeIcon } from "../assets";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../api';
 
 const UpiEditDialog = ({ isOpen, onClose, selectedWithdrawal, fetchData }) => {
   console.log(selectedWithdrawal)
@@ -14,11 +15,9 @@ const UpiEditDialog = ({ isOpen, onClose, selectedWithdrawal, fetchData }) => {
     });
   };
 
-  const deleteUpiDetails_api = `https://copartners.in:5135/api/Withdrawal/${deleteUpiInfo}`;
-
   const deleteUpiDetails = async () => {
     try {
-      const response = await axios.delete(deleteUpiDetails_api);
+      const response = await api.delete(`/Withdrawal/${deleteUpiInfo}`);
       if (response.status === 200) {
         console.log("UPI details deleted successfully");
         fetchData();

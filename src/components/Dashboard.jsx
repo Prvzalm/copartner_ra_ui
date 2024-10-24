@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const Dashboard = () => {
+const Dashboard = ({stackholderId}) => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [isCustomPickerVisible, setIsCustomPickerVisible] = useState(false);
@@ -21,8 +21,6 @@ const Dashboard = () => {
   const [myCard, setMyCard] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const SUB_TABLE_URL = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
 
@@ -340,7 +338,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <ReferralLinkComponent />
+          <ReferralLinkComponent stackholderId={stackholderId}/>
           <EarningAnalysis
             stackholderId={stackholderId}
             startDate={startDate}

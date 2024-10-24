@@ -21,7 +21,7 @@ import UpiEditDialog from "./UpiEditDialog";
 import axios from "axios";
 import DocumentEditPopup from "./DocumentEditPopup";
 
-const Setting = () => {
+const Setting = ({stackholderId}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditBankOpen, setIsEditBankOpen] = useState(false);
   const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
@@ -49,8 +49,6 @@ const Setting = () => {
       reader.readAsDataURL(file);
     }
   };
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const withdrawal_api = `https://copartners.in:5135/api/Withdrawal/BankUPIByUserId/${stackholderId}?userType=RA&page=1&pageSize=100000`;
 
