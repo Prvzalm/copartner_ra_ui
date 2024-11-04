@@ -13,11 +13,11 @@ const SubscriptionChat = () => {
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
-  const CHAT_SERVICE_API = `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`;
+  const CHAT_SERVICE_API = `/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`;
 
   const axiosServiceData = async () => {
     try {
-      const res = await axios.get(CHAT_SERVICE_API);
+      const res = await api.get(CHAT_SERVICE_API);
       console.log("API response:", res.data); // Log the response
       setChat(res.data.data || []); // Ensure data is an array
       setError(null);

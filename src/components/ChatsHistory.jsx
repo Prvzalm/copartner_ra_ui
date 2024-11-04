@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import ChatBubble from "./ChatBubble";
 import { Link } from "react-router-dom";
 import * as signalR from "@microsoft/signalr";
+import api from "../api";
 
 const ChatsHistory = ({stackholderId}) => {
   const [smallScreen, setSmallScreen] = useState(false);
@@ -72,8 +73,8 @@ const ChatsHistory = ({stackholderId}) => {
   useEffect(() => {
     const fetchChatPlan = async () => {
       try {
-        const { data } = await axios.get(
-          `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
+        const { data } = await api.get(
+          `/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
         );
         setChatPlan(data.data);
       } catch (error) {
@@ -90,8 +91,8 @@ const ChatsHistory = ({stackholderId}) => {
     try {
       const {
         data: { data: users },
-      } = await axios.get(
-        `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatUsersById/${stackholderId}`
+      } = await api.get(
+        `/ChatConfiguration/GetChatUsersById/${stackholderId}`
       );
   
       const filteredUsers = users.filter((user) => {
@@ -264,7 +265,7 @@ const ChatsHistory = ({stackholderId}) => {
       const receiver = user.mobileNumber;
       const connection = new signalR.HubConnectionBuilder()
         .withUrl(
-          `https://copartners.in/Featuresservice/chathub?username=${encodeURIComponent(
+          `https://copartners.in:5137/chathub?username=${encodeURIComponent(
             email
           )}&chatPartnerUsername=${encodeURIComponent(receiver)}`
         )

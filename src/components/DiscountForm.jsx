@@ -22,8 +22,8 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get(
-          `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
+        const response = await api.get(
+          `/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
         );
 
         if (response.data && response.data.isSuccess) {

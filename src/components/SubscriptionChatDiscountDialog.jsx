@@ -4,6 +4,7 @@ import { closeIcon } from "../assets";
 import { toast } from "react-toastify";
 import FreeTimeForm from "./FreeTimeForm";
 import DiscountForm from "./DiscountForm";
+import api from "../api";
 
 const SubscriptionChatDiscountDialog = ({ closeDialog, addCourse }) => {
   const [selectedButton, setSelectedButton] = useState("Discount");
@@ -12,8 +13,8 @@ const SubscriptionChatDiscountDialog = ({ closeDialog, addCourse }) => {
 
   const fetchPlans = async () => {
     try {
-      const response = await axios.get(
-        `https://copartners.in/Featuresservice/api/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
+      const response = await api.get(
+        `/ChatConfiguration/GetChatPlanByExpertsId/${stackholderId}?page=1&pageSize=100000`
       );
 
       // Log the entire response for debugging
