@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 import api from "../api";
 
-const CallDialog = ({ isFreeCallsDialogOpen, closeDialog, stackholderId }) => {
+const CallDialog = ({
+  isFreeCallsDialogOpen,
+  closeDialog,
+  stackholderId,
+  showSubscriptionType,
+}) => {
   const [name, setName] = useState("");
   const [above, setAbove] = useState("");
   const [targets, setTargets] = useState(["", "", "", ""]);
@@ -14,6 +19,26 @@ const CallDialog = ({ isFreeCallsDialogOpen, closeDialog, stackholderId }) => {
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isMethodOpen, setIsMethodOpen] = useState(false);
   const [blurTargets, setBlurTargets] = useState(false);
+  const [chatId, setChatId] = useState("");
+  console.log(showSubscriptionType);
+
+  useEffect(() => {
+    const fetchChatId = async () => {
+      try {
+        const response = await api.get(`/Experts/${stackholderId}`);
+        const { data } = response.data;
+
+        // Dynamically select the chatId based on showSubscriptionType
+        const selectedChatId = data[`chatId${showSubscriptionType}`];
+        console.log(selectedChatId);
+        setChatId(selectedChatId);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchChatId();
+  }, [stackholderId, showSubscriptionType]);
 
   const inputClassName =
     subscriptionType || methodType === null ? "text-[#9BA3AF]" : "text-white";
@@ -112,19 +137,15 @@ const CallDialog = ({ isFreeCallsDialogOpen, closeDialog, stackholderId }) => {
       target3: parseFloat(targets[2]) || 0,
       target4: parseFloat(targets[3]) || 0,
       stopLoss: parseFloat(SL) || 0,
-      blur: blurTargets
+      blur: blurTargets,
     };
 
     try {
-      const response = await api.post(
-        "/CallPost",
-        callData,
-        {
-          headers: {
-            "Content-Type": "application/json-patch+json",
-          },
-        }
-      );
+      const response = await api.post("/CallPost", callData, {
+        headers: {
+          "Content-Type": "application/json-patch+json",
+        },
+      });
       toast.success(response.data.displayMessage);
       closeDialog();
       // Handle success case, close dialog, or show a success message

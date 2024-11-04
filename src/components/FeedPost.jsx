@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import FollowerFeedDialog from "./FollowerFeedDialog";
 import FeedUploadPostDialog from "./FeedUploadPostDialog";
 import ImageDetailsDialog from "./ImageDetailsDialog";
+import api from "../api";
 
 const FeedPost = ({ stackholderId }) => {
   const [isFollowerDialog, setIsFollowerDialog] = useState(false);
@@ -15,8 +15,8 @@ const FeedPost = ({ stackholderId }) => {
 
   const fetchFeedData = async () => {
     try {
-      const response = await axios.get(
-        `https://copartners.in:5132/api/Feed/GetByExpertsId?expertsId=${stackholderId}&postType=${postType}&page=1&pageSize=10000`
+      const response = await api.get(
+        `/Feed/GetByExpertsId?expertsId=${stackholderId}&postType=${postType}&page=1&pageSize=10000`
       );
       if (response.data.isSuccess) {
         const fetchedImages = response.data.data.flatMap((expert) =>

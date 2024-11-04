@@ -53,6 +53,7 @@ export function getFullUrl(relativeUrl) {
     '/Authentication/authenticate': { baseUrl: baseUrls[5130], useApi: false },
     '/Experts': { baseUrl: baseUrls[5132], useApi: true },
     '/CallPost': { baseUrl: baseUrls[5132], useApi: true },
+    '/Feed': { baseUrl: baseUrls[5132], useApi: true },
     '/CallNotification/SendMessagePremium': { baseUrl: baseUrls[5132], useApi: true },
     '/TelegramMessage': { baseUrl: baseUrls[5134], useApi: true },
     '/WithDrawal': { baseUrl: baseUrls[5135], useApi: true },

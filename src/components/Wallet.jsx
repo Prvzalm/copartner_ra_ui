@@ -56,10 +56,10 @@ const Wallet = ({stackholderId}) => {
 
       const requestsWithBankDetails = await Promise.all(
         withdrawalRequests.map(async (request) => {
-          const bankDetails = await fetchBankDetails(request.withdrawalModeId);
+          // const bankDetails = await fetchBankDetails(request.withdrawalModeId);
           return {
             ...request,
-            bankDetails,
+            // bankDetails,
           };
         })
       );
@@ -802,11 +802,11 @@ const Wallet = ({stackholderId}) => {
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">BANK:</span>{" "}
-                      {row.bankDetails.bankName || row.bankDetails.upI_ID}
+                      {row.bankDetails?.bankname || row.bankDetails?.upI_ID}
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">ACCOUNT NUMBER:</span>{" "}
-                      {row.bankDetails.accountNumber || row.bankDetails.upI_ID}
+                      {row.bankDetails?.accountNumber || row.bankDetails?.upI_ID}
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">AMOUNT:</span>{" "}
@@ -855,12 +855,12 @@ const Wallet = ({stackholderId}) => {
                                   {formatDate(row.withdrawalRequestDate)}
                                 </td>
                                 <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                                  {row.bankDetails.bankName ||
-                                    row.bankDetails.upI_ID}
+                                  {row.bankDetails?.bankname ||
+                                    row.bankDetails?.upI_ID}
                                 </td>
                                 <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                                  {row.bankDetails.accountNumber ||
-                                    row.bankDetails.upI_ID}
+                                  {row.bankDetails?.accountNumber ||
+                                    row.bankDetails?.upI_ID}
                                 </td>
                                 <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                                   {row.amount}
@@ -928,12 +928,12 @@ const Wallet = ({stackholderId}) => {
                       </span>
                       <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                         <span className="text-dimWhite">BANK:</span>{" "}
-                        {row.bankDetails.bankName || row.bankDetails.upI_ID}
+                        {row.bankDetails?.bankname || row.bankDetails?.upI_ID}
                       </span>
                       <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                         <span className="text-dimWhite">ACCOUNT NUMBER:</span>{" "}
-                        {row.bankDetails.accountNumber ||
-                          row.bankDetails.upI_ID}
+                        {row.bankDetails?.accountNumber ||
+                          row.bankDetails?.upI_ID}
                       </span>
                       <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                         <span className="text-dimWhite">AMOUNT:</span>{" "}
@@ -979,11 +979,11 @@ const Wallet = ({stackholderId}) => {
                             {formatDate(row.withdrawalRequestDate)}
                           </td>
                           <td className="w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                            {row.bankDetails.bankName || row.bankDetails.upI_ID}
+                            {row.bankDetails?.bankname || row.bankDetails?.upI_ID}
                           </td>
                           <td className="px-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                            {row.bankDetails.accountNumber ||
-                              row.bankDetails.upI_ID}
+                            {row.bankDetails?.accountNumber ||
+                              row.bankDetails?.upI_ID}
                           </td>
                           <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
                             {row.amount}

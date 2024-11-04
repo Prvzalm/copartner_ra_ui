@@ -248,6 +248,7 @@ const CallPost = ({ stackholderId, token }) => {
               isDialogOpen={isFreeCallsDialogOpen}
               closeDialog={closeDialog}
               stackholderId={stackholderId}
+              showSubscriptionType={showSubscriptionType}
             />
           )}
         </div>
