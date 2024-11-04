@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const AnalysisBoard = () => {
+const AnalysisBoard = ({stackholderId}) => {
   const [showAnalysis, setShowAnalysis] = useState("totalVisit");
   const [smallScreen, setSmallScreen] = useState(false);
   const [analysis, setAnalysis] = useState([]);
@@ -17,8 +17,6 @@ const AnalysisBoard = () => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [isCustomPickerVisible, setIsCustomPickerVisible] = useState(false);
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const ANALYSIS_API = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 

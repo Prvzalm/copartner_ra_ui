@@ -3,6 +3,7 @@ import axios from "axios";
 import { closeIcon, tick } from "../assets";
 import AddBankDialog from "./AddBankDialog";
 import AddUpiDialog from "./AddUpiDialog";
+import api from "../api";
 
 const WalletWithdrawal = ({ closeDialog, walletBalance }) => {
   const [isAddBankOpen, setIsAddBankOpen] = useState(false);
@@ -93,7 +94,7 @@ const WalletWithdrawal = ({ closeDialog, walletBalance }) => {
     }
 
     try {
-      const response = await axios.post('https://copartners.in:5135/api/Withdrawal', {
+      const response = await api.post('/Withdrawal', {
         withdrawalBy: "RA",
         amount: inputValue,
         withdrawalModeId,

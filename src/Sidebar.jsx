@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { sideBar } from "./constants";
 import { closeIcon, login, logo } from "./assets";
 
 const Sidebar = ({ activeTab, setActiveTab, setShowSidebar, telegramData }) => {
-  // Accept telegramData as a prop
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -48,31 +47,28 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar, telegramData }) => {
 
   return (
     <div
-      className={`fixed flex flex-col bg-gradient md:w-[210px] h-[100%] ml-[-4rem] py-[2rem] mb-[1rem] z-[999] ${
-        window.innerWidth < 768
-          ? "w-[120%] flex justify-center items-center"
-          : ""
-      }`}
+      className={`fixed overflow-y-auto flex flex-col bg-gradient h-full z-[999] ${
+        window.innerWidth < 768 ? "w-[80%]" : "w-[220px]"
+      } pt-[2rem]`} // Added top padding
+      style={{ left: 0, top: 0 }} // Ensure it stays fixed on the left
     >
-      <button
-        onClick={handleClose}
-        className={`relative bottom-[2rem] left-[8rem] ${
-          window.innerWidth < 786 ? "flex" : "hidden"
-        }`}
-      >
-        <img
-          src={closeIcon}
-          alt="Close"
-          className="w-[45px] h-[45px] ml-[5rem]"
-        />
-      </button>
-      <Link onClick={scrollToTop} to="/">
-        <img
-          src={logo}
-          className="flex justify-center items-center md:w-[133px] w-[160px] md:h-[39px]"
-        />
-      </Link>
-      <div className="flex gap-[1rem] flex-col mt-[2rem]">
+      <div className="flex items-center justify-between px-8">
+        <Link onClick={scrollToTop} to="/">
+          <img
+            src={logo}
+            className="mx-auto mb-4 w-auto h-[40px]"
+            alt="Logo"
+          />
+        </Link>
+        <button
+          onClick={handleClose}
+          className={`relative mb-4 ${window.innerWidth < 768 ? "flex" : "hidden"}`}
+        >
+          <img src={closeIcon} alt="Close" className="w-[40px] h-[40px]" />
+        </button>
+      </div>
+
+      <div className="flex flex-col gap-8 mt-[1rem] px-4">
         {sideBar.map(
           (side) =>
             (side.title !== "Telegram Channel" || telegramData.length > 0) && (
@@ -84,37 +80,31 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar, telegramData }) => {
                   setActiveTab(side.title);
                   handleSidebarTabClick();
                 }}
-                className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row cursor-pointer ${
-                  window.innerWidth >= 768 ? "md:ml-[-4rem] xl:ml-[-4rem]" : ""
-                } ${
+                className={`flex w-auto h-[54px] items-center gap-4 px-4 py-2 rounded-[12px] text-white cursor-pointer ${
                   window.innerWidth >= 768 &&
                   (activeTab === side.title
-                    ? "tab-btn text-[#fff]"
+                    ? "tab-btn text-[#fff] px-4"
                     : "text-white opacity-[50%]")
                 }`}
               >
-                <div className="flex flex-row justify-center gap-4 items-center ml-[4rem]">
-                  <img
-                    src={
-                      activeTab === side.title
-                        ? side.activeIcon
-                        : side.inactiveIcon
-                    }
-                    alt={side.title}
-                    className="md:w-[24px] w-[30px] md:h-[24px] h-[30px]"
-                  />
-                  <span className="font-[400] md:text-[16px] text-[18px]">
-                    {side.title}
-                  </span>
-                </div>
+                <img
+                  src={
+                    activeTab === side.title
+                      ? side.activeIcon
+                      : side.inactiveIcon
+                  }
+                  alt={side.title}
+                  className="w-[24px] h-[24px]"
+                />
+                <span className="font-medium text-[16px]">{side.title}</span>
               </Link>
             )
         )}
       </div>
-      <div className="relative">
+      <div className="mt-8 px-4 pb-4">
         <button
           onClick={handleLogout}
-          className="w-[110px] h-[30px] text-[14px] bg-white text-black rounded-[5px] mt-[1rem] flex items-center justify-center gap-2"
+          className="w-full py-2 bg-white text-black rounded-lg flex items-center justify-center gap-2 text-[16px]"
         >
           Logout
           <img src={login} className="w-[16px] h-[16px]" alt="Login icon" />

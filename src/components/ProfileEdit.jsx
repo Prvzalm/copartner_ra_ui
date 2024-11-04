@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
+import api from "../api";
 
 const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
   const [expertTypeId, setExpertTypeId] = useState("");
@@ -116,8 +117,6 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
   };
 
   const handleChange = async () => {
-    const EDIT_PROFILE = `https://copartners.in:5132/api/Experts?Id=${stackholderId}`;
-
     let uploadedImagePath = imagePath;
 
     if (typeof imagePath === "object") {
@@ -150,7 +149,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
     const patchOperations = generatePatchOperations(originalData, updatedData);
 
     try {
-      await axios.patch(EDIT_PROFILE, patchOperations, {
+      await api.patch(`/Experts?Id=${stackholderId}`, patchOperations, {
         headers: {
           "Content-Type": "application/json-patch+json",
         },

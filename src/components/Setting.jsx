@@ -21,7 +21,7 @@ import UpiEditDialog from "./UpiEditDialog";
 import axios from "axios";
 import DocumentEditPopup from "./DocumentEditPopup";
 
-const Setting = () => {
+const Setting = ({stackholderId}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditBankOpen, setIsEditBankOpen] = useState(false);
   const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
@@ -49,8 +49,6 @@ const Setting = () => {
       reader.readAsDataURL(file);
     }
   };
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const withdrawal_api = `https://copartners.in:5135/api/Withdrawal/BankUPIByUserId/${stackholderId}?userType=RA&page=1&pageSize=100000`;
 
@@ -168,7 +166,7 @@ const Setting = () => {
   };
 
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+    <div className="pb-[5rem] xl:pl-[18rem] md:pl-[16rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1530px] md:w-[1122px] xl -h-[480px] md:h-[580px] w-[361px] h-[650px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
         <div className="flex flex-col">
           <div className="flex flex-row">

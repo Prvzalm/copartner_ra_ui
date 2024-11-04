@@ -62,7 +62,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   return (
     <nav aria-label="Page navigation example">
-      <ul className="flex items-center -space-x-px h-10 text-base justify-end mt-4">
+      <ul className="flex items-center -space-x-px h-10 text-base justify-end mt-4 md:mr-[4rem] ml-[4rem]">
         <li>
           <a
             href="#"

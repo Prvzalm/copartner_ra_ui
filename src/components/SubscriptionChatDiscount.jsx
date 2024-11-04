@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { deleteIcon } from "../assets";
 import SubscriptionChatDiscountDialog from "./SubscriptionChatDiscountDialog";
+import api from "../api";
 
 const SubscriptionChatDiscount = () => {
   const [smallScreen, setSmallScreen] = useState(false);
@@ -43,8 +44,8 @@ const SubscriptionChatDiscount = () => {
   };
 
   const handleDelete = async (id, planType) => {
-    const DELETE_URL = `https://copartners.in/Featuresservice/api/ChatConfiguration/${id}`;
-    const PATCH_URL = `https://copartners.in/Featuresservice/api/ChatConfiguration?Id=${id}`;
+    const DELETE_URL = `/ChatConfiguration/${id}`;
+    const PATCH_URL = `/ChatConfiguration?Id=${id}`;
     const patchData = [
       {
         path: "discountValidFrom",
@@ -65,7 +66,7 @@ const SubscriptionChatDiscount = () => {
 
     try {
       if (planType === "F") {
-        const response = await axios.delete(DELETE_URL);
+        const response = await api.delete(DELETE_URL);
 
         if (response.status === 200) {
           setCourses((prevCourses) => prevCourses.filter((course) => course.id !== id));
@@ -74,7 +75,7 @@ const SubscriptionChatDiscount = () => {
           setError("Failed to delete the chat. Please try again later.");
         }
       } else {
-        const response = await axios.patch(PATCH_URL, patchData, {
+        const response = await api.patch(PATCH_URL, patchData, {
           headers: {
             'Content-Type': 'application/json-patch+json'
           }

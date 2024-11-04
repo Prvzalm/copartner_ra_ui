@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
+import api from "../api";
 
 const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   const [subscriptionType, setSubscriptionType] = useState(null);
@@ -113,7 +114,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
     }
 
     try {
-      const response = await axios.post('https://copartners.in:5009/api/Subscription', postData);
+      const response = await api.post('/Subscription', postData);
       console.log("Response:", response);
       if (response.status !== 200) {
         handleError("Something went wrong! " + response.status);

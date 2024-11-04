@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { dropdown } from "../assets";
+import api from "../api";
 
 const DiscountForm = ({ closeDialog, addCourse }) => {
   const [plans, setPlans] = useState([]);
@@ -100,8 +101,8 @@ const DiscountForm = ({ closeDialog, addCourse }) => {
     ];
 
     try {
-      const response = await axios.patch(
-        `https://copartners.in/Featuresservice/api/ChatConfiguration?Id=${subID}`,
+      const response = await api.patch(
+        `/ChatConfiguration?Id=${subID}`,
         patchData,
         {
           headers: {

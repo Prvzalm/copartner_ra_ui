@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { closeIcon, signup, eye, eyeClose } from "../assets";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from 'jwt-decode';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../authContext";
+import api from "../api";
 
 const SignUp = ({ setIsSignedUp }) => {
+  const { setAuthState } = useContext(AuthContext);
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -47,16 +51,26 @@ const SignUp = ({ setIsSignedUp }) => {
       userIpAddress: "string",
     };
     try {
-      const response = await axios.post(
-        "https://copartners.in:5130/Authentication/authenticate",
+      const response = await api.post(
+        '/Authentication/authenticate',
         postData,
         { headers: { "Content-Type": "application/json" } }
       );
       const data = response.data;
       const stackholderId = data.data.stackholderId;
-      console.log(stackholderId, 'Session store')
-      sessionStorage.setItem("stackholderId", stackholderId);
+      const token = response.data.data.jwtToken;
+      const decodedToken = jwtDecode(token);
+      const expirationTime = decodedToken.exp * 1000;
+      sessionStorage.setItem('authToken', token);
+      sessionStorage.setItem('stackholderId', stackholderId);
+      sessionStorage.setItem('tokenExpiration', expirationTime);
+      sessionStorage.setItem('isAuthenticated', true);
       // Schedule removal of sessionStorage item after 10 seconds
+      setAuthState({
+        token,
+        stackholderId,
+        isAuthenticated: true,
+      });
       timeoutId = setTimeout(() => {
         sessionStorage.removeItem("stackholderId");
         sessionStorage.setItem("visitedSignUp", "false");
@@ -65,8 +79,8 @@ const SignUp = ({ setIsSignedUp }) => {
           position: "top-right",
         });
       }, 86400000);
-      const stackholderResponse = await axios.get(
-        `${STACKHOLDER_API}/${stackholderId}`
+      const stackholderResponse = await api.get(
+        `/Experts/${stackholderId}`
       );
       if (data.data.email.toLowerCase() === emailId.toLowerCase()) {
         if (password === "Copartner@1234#") {

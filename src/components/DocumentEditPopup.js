@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { editDocument } from "../assets";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import api from "../api";
 
 const DocumentEditPopup = ({ onClose, stackholderId }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -51,8 +52,8 @@ const DocumentEditPopup = ({ onClose, stackholderId }) => {
     ];
 
     try {
-      const response = await axios.patch(
-        `https://copartners.in:5132/api/Experts?Id=${stackholderId}`,
+      const response = await api.patch(
+        `/Experts?Id=${stackholderId}`,
         patchData,
         {
           headers: {

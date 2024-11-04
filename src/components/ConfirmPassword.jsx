@@ -1,9 +1,11 @@
+// ConfirmPassword.js
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import queryString from "query-string";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { closeIcon, signup, eye, eyeClose } from "../assets";
+import api, { getFullUrl } from '../api'; // Import the Axios instance
 
 const ConfirmPassword = () => {
   const [password, setPassword] = useState("");
@@ -37,24 +39,24 @@ const ConfirmPassword = () => {
     const token = sessionStorage.getItem("resetToken");
 
     try {
-      const response = await fetch(
-        "https://copartners.in:5130/api/Users/ResetForgotPassword",
+      const relativeUrl = '/Users/ResetForgotPassword'; // Updated relative URL
+      const fullUrl = getFullUrl(relativeUrl); // Use getFullUrl to construct the URL
+
+      const response = await api.post(
+        fullUrl,
         {
-          method: "POST",
+          password: confirmPassword,
+          token,
+        },
+        {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ password: confirmPassword, token }),
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to reset password");
-      }
-
-      const data = await response.json();
+      const data = response.data;
 
       if (data.isSuccess) {
         toast.success("Password has been successfully reset");
@@ -64,8 +66,8 @@ const ConfirmPassword = () => {
         toast.error(data.message || "Failed to reset password. Please try again.");
       }
     } catch (error) {
-      console.error("Reset password error:", error.message);
-      toast.error(error.message || "An error occurred. Please try again.");
+      console.error("Reset password error:", error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -99,9 +101,7 @@ const ConfirmPassword = () => {
         <div className="bg-gradient border-[1px] border-[#ffffff2a] m-4 p-6 rounded-lg w-96 relative text-center">
           <div className="absolute top-3 right-0 text-right">
             <button
-              onClick={() => {
-                handleClose();
-              }}
+              onClick={handleClose}
               className="text-gray-400 w-8 text-[20px] cursor-pointer hover:text-white"
             >
               <img src={closeIcon} alt="close" />
@@ -129,8 +129,13 @@ const ConfirmPassword = () => {
                 type="button"
                 onClick={togglePasswordVisibility}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                <img src={showPassword ? eye : eyeClose} className="w-5" alt="toggle visibility" />
+                <img
+                  src={showPassword ? eye : eyeClose}
+                  className="w-5"
+                  alt="toggle visibility"
+                />
               </button>
             </div>
             <div className="relative">
@@ -146,8 +151,13 @@ const ConfirmPassword = () => {
                 type="button"
                 onClick={toggleConfirmPasswordVisibility}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
               >
-                <img src={showConfirmPassword ? eye : eyeClose} className="w-5" alt="toggle visibility" />
+                <img
+                  src={showConfirmPassword ? eye : eyeClose}
+                  className="w-5"
+                  alt="toggle visibility"
+                />
               </button>
             </div>
             <button

@@ -10,7 +10,7 @@ import Pagination from "./Pagination";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 
-const Wallet = () => {
+const Wallet = ({stackholderId}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showTransactions, setShowTransactions] = useState("transaction");
   const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
@@ -29,8 +29,6 @@ const Wallet = () => {
   const [hoveredRow, setHoveredRow] = useState(null);
   const [copiedRow, setCopiedRow] = useState(null);
   const pageSize = 15;
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const WALLET_BALANCE_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
 
@@ -58,10 +56,10 @@ const Wallet = () => {
 
       const requestsWithBankDetails = await Promise.all(
         withdrawalRequests.map(async (request) => {
-          const bankDetails = await fetchBankDetails(request.withdrawalModeId);
+          // const bankDetails = await fetchBankDetails(request.withdrawalModeId);
           return {
             ...request,
-            bankDetails,
+            // bankDetails,
           };
         })
       );
@@ -531,7 +529,7 @@ const Wallet = () => {
   };
 
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+    <div className="pb-[5rem] xl:pl-[18rem] md:pl-[16rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex md:flex-row flex-col justify-between">
         <span className="md:w-[176px] w-[58px] md:h-[27px] h-[28px] font-inter md:text-[22px] text-[20px] font-[600] leading-[27px] text-[#ffffff]">
           Wallet
@@ -837,11 +835,11 @@ const Wallet = () => {
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">BANK:</span>{" "}
-                      {row.bankDetails.bankName || row.bankDetails.upI_ID}
+                      {row.bankDetails?.bankname || row.bankDetails?.upI_ID}
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">ACCOUNT NUMBER:</span>{" "}
-                      {row.bankDetails.accountNumber || row.bankDetails.upI_ID}
+                      {row.bankDetails?.accountNumber || row.bankDetails?.upI_ID}
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">AMOUNT:</span>{" "}
@@ -890,12 +888,12 @@ const Wallet = () => {
                                   {formatDate(row.withdrawalRequestDate)}
                                 </td>
                                 <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                                  {row.bankDetails.bankName ||
-                                    row.bankDetails.upI_ID}
+                                  {row.bankDetails?.bankname ||
+                                    row.bankDetails?.upI_ID}
                                 </td>
                                 <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                                  {row.bankDetails.accountNumber ||
-                                    row.bankDetails.upI_ID}
+                                  {row.bankDetails?.accountNumber ||
+                                    row.bankDetails?.upI_ID}
                                 </td>
                                 <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                                   {row.amount}
@@ -963,12 +961,12 @@ const Wallet = () => {
                       </span>
                       <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                         <span className="text-dimWhite">BANK:</span>{" "}
-                        {row.bankDetails.bankName || row.bankDetails.upI_ID}
+                        {row.bankDetails?.bankname || row.bankDetails?.upI_ID}
                       </span>
                       <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                         <span className="text-dimWhite">ACCOUNT NUMBER:</span>{" "}
-                        {row.bankDetails.accountNumber ||
-                          row.bankDetails.upI_ID}
+                        {row.bankDetails?.accountNumber ||
+                          row.bankDetails?.upI_ID}
                       </span>
                       <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                         <span className="text-dimWhite">AMOUNT:</span>{" "}
@@ -1014,11 +1012,11 @@ const Wallet = () => {
                             {formatDate(row.withdrawalRequestDate)}
                           </td>
                           <td className="w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                            {row.bankDetails.bankName || row.bankDetails.upI_ID}
+                            {row.bankDetails?.bankname || row.bankDetails?.upI_ID}
                           </td>
                           <td className="px-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                            {row.bankDetails.accountNumber ||
-                              row.bankDetails.upI_ID}
+                            {row.bankDetails?.accountNumber ||
+                              row.bankDetails?.upI_ID}
                           </td>
                           <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
                             {row.amount}

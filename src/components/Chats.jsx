@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ChatsHistory from "./ChatsHistory";
+import api from "../api";
 
-const Chats = () => {
+const Chats = ({stackholderId}) => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [isChat, setIsChat] = useState(false);
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const expertAPI = `https://copartners.in:5132/api/Experts/${stackholderId}`;
 
@@ -37,14 +36,12 @@ const Chats = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const isChatLiveApi = `https://copartners.in:5132/api/Experts?Id=${stackholderId}`;
-
   const handleCheckboxChange = async () => {
     const newValue = !isChat; 
     setIsChat(newValue); 
 
     try {
-      await axios.patch(isChatLiveApi, [
+      await api.patch(`/Experts?Id=${stackholderId}`, [
         {
           path: "isChatLive",
           op: "replace",
@@ -69,7 +66,7 @@ const Chats = () => {
 
   return (
     <>
-    <div className="xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:pt-[6rem] pt-[8rem] bg-gradient">
+    <div className="xl:pl-[18rem] md:pl-[16rem] pl-[1rem] md:pt-[6rem] pt-[8rem] bg-gradient">
       <div className="xl:w-[1520px] md:w-[1130px] w-[370px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
           Chats Status
@@ -102,7 +99,7 @@ const Chats = () => {
       </div> */}
     </div>
 
-    <ChatsHistory />
+    <ChatsHistory stackholderId={stackholderId} />
     </>
   );
 };

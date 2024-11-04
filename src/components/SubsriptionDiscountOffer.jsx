@@ -4,6 +4,7 @@ import SubscriptionEditDiscount from "./SubscriptionEditDiscount";
 import axios from "axios";
 import { toast } from "react-toastify";
 import SubscriptionChat from "./SubscriptionChat";
+import api from "../api";
 
 const SubsriptionDiscountOffer = () => {
   const [smallScreen, setSmallScreen] = useState(false);
@@ -33,7 +34,7 @@ const SubsriptionDiscountOffer = () => {
   };
 
   const handleDeleteTable = async (id) => {
-    const PATCH_URL = `https://copartners.in:5009/api/Subscription?Id=${id}`;
+    const PATCH_URL = `/Subscription?Id=${id}`;
     const patchData = [
       {
         path: "discountValidFrom",
@@ -53,7 +54,7 @@ const SubsriptionDiscountOffer = () => {
     ];
 
     try {
-      const response = await axios.patch(PATCH_URL, patchData, {
+      const response = await api.patch(PATCH_URL, patchData, {
         headers: {
           'Content-Type': 'application/json-patch+json'
         }

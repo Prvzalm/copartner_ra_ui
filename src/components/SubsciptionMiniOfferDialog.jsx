@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
+import api from "../api";
 
 const SubsciptionMiniOfferDialog = ({
   closeDialog,
@@ -124,8 +125,8 @@ const SubsciptionMiniOfferDialog = ({
     }
 
     try {
-      const response = await axios.post(
-        "https://copartners.in:5009/api/Subscription",
+      const response = await api.post(
+        "/Subscription",
         postData
       );
       console.log("Response:", response);

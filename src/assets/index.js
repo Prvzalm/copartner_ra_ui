@@ -68,6 +68,10 @@ import telegramChannelActive from './telegramChannelActive.png';
 import telegramChannelInactive from './telegramChannelInactive.png';
 import standardQues from './standardQues.png';
 import standardQuesInactive from './standardQuesInactive.png';
+import exit from './exit.png';
+import heart from './heart.png';
+import chatImg from './chatImg.png';
+import commentIcon from './commentIcon.png';
 
 export {
     availableIcon,
@@ -126,5 +130,7 @@ export {
     threeDots,
     chatUser1, chatUser2,
     attachDoc, sendChat, audio,
-    chatUser3,
+    chatUser3, exit,
+    heart, chatImg,
+    commentIcon
 }
